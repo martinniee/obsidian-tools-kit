@@ -1,11 +1,11 @@
 {
-  "id": "nl-Back2TopLink",
-  "name": "Back To Top Link",
-  "version": "0.0.1",
-  "minAppVersion": "0.15.0",
-  "description": "add Back-to-top link to  header title which is over h1 title",
-  "author": "Nathaniel",
-  "authorUrl": "github.com/martiniee",
-  "fundingUrl": "",
-  "isDesktopOnly": "false"
+	"id": "nl-tools-Kit",
+	"name": "Tools Kit",
+	"version": "0.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "Integrate various of utilities used to process markdown",
+	"author": "Nathaniel",
+	"authorUrl": "https://github.com/martinniee/",
+	"fundingUrl": "",
+	"isDesktopOnly": "false"
 }
