@@ -1,0 +1,11 @@
+{
+  "id": "nl-Back2TopLink",
+  "name": "Back To Top Link",
+  "version": "0.0.1",
+  "minAppVersion": "0.15.0",
+  "description": "add Back-to-top link to  header title which is over h1 title",
+  "author": "Nathaniel",
+  "authorUrl": "github.com/martiniee",
+  "fundingUrl": "",
+  "isDesktopOnly": "false"
+}
