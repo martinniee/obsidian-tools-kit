@@ -50,14 +50,13 @@ export default class MyPlugin extends Plugin {
 					resolveFrontmatterLinkTextAsLink();
 				}
 			}
-		}))
-		this.registerEvent(app.workspace.on('active-leaf-change', () => {
-			resolveFrontmatterLinkTextAsLink();
-		}))
-		// register all 'add command' commands from   addCommand-config.ts
-		addCommand(this);
+			this.registerEvent(app.workspace.on('active-leaf-change', () => {
+				resolveFrontmatterLinkTextAsLink();
+			}))
+			// register all 'add command' commands from   addCommand-config.ts
+			addCommand(this);
 
-	}
+		}
 	/**
 	 * 
 	 * @param el 
@@ -68,35 +67,35 @@ export default class MyPlugin extends Plugin {
 	 * @returns 
 	 */
 	onElement(
-		el: Document,
-		event: keyof HTMLElementEventMap,
-		selector: string,
-		listener: Listener,
-		options?: { capture?: boolean }
-	) {
-		el.on(event, selector, listener, options);
-		return () => el.off(event, selector, listener, options);
-	}
+			el: Document,
+			event: keyof HTMLElementEventMap,
+			selector: string,
+			listener: Listener,
+			options ?: { capture?: boolean }
+		) {
+			el.on(event, selector, listener, options);
+			return() => el.off(event, selector, listener, options);
+		}
 
 
 	/**
 	 * when plugin onunload
 	 */
 	onunload() {
-		console.log("-----------Tools Kit plugin onunload...-----------");
+			console.log("-----------Tools Kit plugin onunload...-----------");
 
-	}
+		}
 	/**
 	 * load setings from  settings file  (data.json)
 	 */
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
+			this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		}
 	/**
 	 * save the configuration in setting option modal
 	 */
 	async saveSettings() {
-		await this.saveData(this.settings);
-	}
+			await this.saveData(this.settings);
+		}
 
 }
