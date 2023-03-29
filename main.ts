@@ -98,4 +98,4 @@ export default class MyPlugin extends Plugin {
 			await this.saveData(this.settings);
 		}
 
-}
+		}
