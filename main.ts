@@ -1,5 +1,5 @@
 // import necessary package : App、Editor, MarkdownView, Modal, Notice, Plugin
-import { App, Plugin, TFile } from 'obsidian';
+import { App, Plugin, TFile, MarkdownView } from 'obsidian';
 
 // import "MyPluginSettings、 DEFAULT_SETTINGS"
 import { MyPluginSettings, DEFAULT_SETTINGS } from "./src/settings";
@@ -8,7 +8,14 @@ import { MyPluginSettingsTab } from "./src/settings";
 
 import { clearBackToTopLink, addBackToTopLinkForOtherHeaders } from "./src/options/add-back-to-top-link";
 import { addBackToTopLinkForJuejin, copyContentToClipboard } from "./src/options/add-back-to-top-link-for";
-import { resolveFrontmatterLinkTextAsClickableLink } from "./src/options/resolve-frontmatter-link-text-as-a-tag";
+
+import { resolveAsLink } from "./src/options/resolve-frontmatter-link-text-as-external-link";
+
+interface Listener {
+
+	(this: Document, ev: Event): any;
+}
+
 
 /**
  * Create plugin object
@@ -26,9 +33,29 @@ export default class MyPlugin extends Plugin {
 		await this.loadSettings();
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new MyPluginSettingsTab(this.app, this));
-		// when editor change ,run addBackToTopLinkForOtherHeaders
+
+
+		// when editor change ,run resolveAsLink
 		this.registerEvent(app.workspace.on('file-open', () => {
-			resolveFrontmatterLinkTextAsClickableLink();
+			let activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView) {
+				let viewState = activeView.getMode() as string;
+				if (viewState && viewState === 'preview') {
+					resolveAsLink();
+				}
+			}
+		}))
+		this.registerEvent(app.workspace.on('layout-change', () => {
+			let activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView) {
+				let viewState = activeView.getMode() as string;
+				if (viewState && viewState === 'preview') {
+					resolveAsLink();
+				}
+			}
+		}))
+		this.registerEvent(app.workspace.on('active-leaf-change', () => {
+			resolveAsLink();
 		}))
 		// --------Back-to-top link--------
 		this.addCommand({
@@ -60,11 +87,32 @@ export default class MyPlugin extends Plugin {
 			id: 'resolve-frontmatter-as-link',
 			name: 'Resolve frontmatter link as Link',
 			callback: () => {
-				resolveFrontmatterLinkTextAsClickableLink();
+				resolveAsLink();
 
 			}
 		});
 	}
+	/**
+	 * 
+	 * @param el 
+	 * @param event 
+	 * @param selector 
+	 * @param listener 
+	 * @param options 
+	 * @returns 
+	 */
+	onElement(
+		el: Document,
+		event: keyof HTMLElementEventMap,
+		selector: string,
+		listener: Listener,
+		options?: { capture?: boolean }
+	) {
+		el.on(event, selector, listener, options);
+		return () => el.off(event, selector, listener, options);
+	}
+
+
 	/**
 	 * when plugin onunload
 	 */
