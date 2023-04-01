@@ -24,6 +24,8 @@ export const resolveFrontmatterLinkTextAsLink = () => {
     // iterate  frontmatter_section_list
     for (let i = 0; i < frontmatter_section_list.length; i++) {
         // frontmatter-section-data
+        // if current element contains class attribute value "mod-tags",then skip
+        if (frontmatter_section_list[i].classList.contains("mod-tags")) continue;
         const frontmatter_section_data = frontmatter_section_list[i].querySelector('.frontmatter-section-data');
         //  frontmatter-section-data-item
         const data_item = frontmatter_section_data?.querySelector('.frontmatter-section-data-item');
