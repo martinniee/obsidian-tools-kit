@@ -10,3 +10,5 @@
     -   16 点 54 分 修复：当笔记中不包含 frontmatter 写入剪切板内容空
 -   2023 年 4 月 1 日
     -   16 点 10 分 修复：🐞 fix: when enabling the Display Frontmatter core plugin and the frontmatter containing tags field. to resolve frontmatter as link failed
+-   2023 年 4 月 29 日
+-   -   19 点 46 分 修复：🐞 fix: render does not work as the yaml contains aliases field with value
