@@ -1,3 +1,4 @@
+import { getContentsArr } from './getContentsAsArr';
 import { TFile } from "obsidian";
 
 /**
@@ -20,9 +21,7 @@ export const getMainContent = async (): Promise<string | undefined> => {
  * If the note contain frontmatter
  */
 const isContainsFrontmatter = async (): Promise<boolean | undefined> => {
-    const activeMd: TFile = app.workspace.getActiveFile() as TFile;
-    const origin_filecontents = await app.vault.read(activeMd);
-    const fileContents_array = origin_filecontents.split("\n");
+    const fileContents_array = await getContentsArr()
 
     let num: number = 0;
     for (let line of fileContents_array) {
@@ -48,9 +47,7 @@ const isContainsFrontmatter = async (): Promise<boolean | undefined> => {
  * Get main content when frontmatter exists
  */
 const getMainContentWhenFrontMatterExists = async (): Promise<string> => {
-    const activeMd: TFile = app.workspace.getActiveFile() as TFile;
-    const origin_filecontents = await app.vault.read(activeMd);
-    const fileContents_array = origin_filecontents.split("\n");
+    const fileContents_array = await getContentsArr()
     const new_filecontents: string[] = [];
 
     let num: number = 0;
@@ -65,5 +62,5 @@ const getMainContentWhenFrontMatterExists = async (): Promise<string> => {
         }
         new_filecontents.push(line);
     }
-    return new_filecontents.join("\n") as string;
+    return new_filecontents.join("\n");
 }
