@@ -10,7 +10,7 @@ export const generateTableOfContents = async (): Promise<string> => {
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        if (line.startsWith('#')) {
+        if (line.startsWith('##')) {
             // If the line starts with a hash symbol, it is a heading
             const level = line.indexOf(' '); // Determine the level of the heading by counting the number of hash symbols
             const text = line.slice(level + 1); // Extract the text of the heading by removing the hash symbols and leading whitespace
