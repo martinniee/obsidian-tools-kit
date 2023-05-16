@@ -9,6 +9,7 @@ import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/add-back-
 import { resolveFrontmatterLinkTextAsLink } from "../options/resolve-frontmatter-link-text-as-external-link";
 import { getYaml } from 'src/options/utils/getYaml';
 import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
+import { addUniqueIdToFrontmatterField } from 'src/options/genUniqueIdForNote';
 
 
 export const addCommand = (plugin: nlToolsKit) => {
@@ -82,6 +83,14 @@ export const addCommand = (plugin: nlToolsKit) => {
         name: '添加版权信息到文档中空行',
         callback: async () => {
             insertCopyright(plugin);
+        }
+    });
+    // --------Generate unique id for file from file name with md5 --------
+    plugin.addCommand({
+        id: '08-generate-uniqute-id-for-file-from-file-name-with-md5',
+        name: '根据文件名给指定字段生成MD5唯一id',
+        callback: async () => {
+            addUniqueIdToFrontmatterField(plugin);
         }
     });
 
