@@ -11,9 +11,16 @@
 -   2023 年 4 月 1 日
     -   16 点 10 分 修复：🐞 fix: when enabling the Display Frontmatter core plugin and the frontmatter containing tags field. to resolve frontmatter as link failed
 -   2023 年 4 月 29 日
--   -   19 点 46 分 修复：🐞 fix: render does not work as the yaml contains aliases field with value
+    -   19 点 46 分 修复：🐞 fix: render does not work as the yaml contains aliases field with value
 -   2023 年 5 月 5 日
 
 Release 0.1.5
 
 -   2023 年 5 月 5 日 ✨ feat: copy contents with toc and write into clipboard
+
+Release 0.2.5 2023/5/16
+
+-   ✨ feat: insert copyright to blankline of random index
+-   ✨ feat: numbering heading starting with h2-level
+-   🐞 fix: extract heading from #comment within codefence generate TOC incorrectly
+-   ✨ feat: add value of unique id to specific key in frontmatter by filename with md5

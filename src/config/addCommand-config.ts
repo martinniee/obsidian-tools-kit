@@ -70,7 +70,7 @@ export const addCommand = (plugin: nlToolsKit) => {
         name: '复制带有 TOC 的的正文到剪切板',
         callback: async () => {
             const contents: string = (await getContentsArr()).join('\n');
-            const yaml: string = getYaml(contents);
+            const yaml: string = await getYaml();
             const toc: string = await generateTableOfContents();
             const mainContent: string = await getMainContent() as string;
             const contentWithTOC = `${yaml}\n${toc}\n${mainContent}`;
