@@ -4,7 +4,7 @@ import { TFile } from "obsidian";
 /**
  * Get the main contents except the frontmatter
  */
-export const getMainContent = async (): Promise<string | undefined> => {
+export const getMainContent = async (): Promise<string> => {
     const activeMd: TFile = app.workspace.getActiveFile() as TFile;
     const origin_filecontents = await app.vault.read(activeMd);
     const isFrontmatterExists = await isContainsFrontmatter();
@@ -20,14 +20,14 @@ export const getMainContent = async (): Promise<string | undefined> => {
 /**
  * If the note contain frontmatter
  */
-const isContainsFrontmatter = async (): Promise<boolean | undefined> => {
+export const isContainsFrontmatter = async (): Promise<boolean> => {
     const fileContents_array = await getContentsArr()
 
     let num: number = 0;
     for (let line of fileContents_array) {
         const isMatchFrontmatter: boolean = line.match(/^-{3}/g) !== null;
         if (isMatchFrontmatter && num < 2) {
-            num++
+            num++;
             if (num > 1) {
                 // exists frontmatter in current note
                 return true;
@@ -40,6 +40,8 @@ const isContainsFrontmatter = async (): Promise<boolean | undefined> => {
     if (!(num > 1)) {
         // no-existent frontmatter in current note
         return false;
+    } else {
+        return true;
     }
 }
 

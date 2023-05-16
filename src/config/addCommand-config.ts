@@ -3,16 +3,17 @@ import { getMainContent } from './../options/utils/getMainContent';
 import { copyMainContentToClipboard } from "src/options/copy-main-body-of-note-and-write-to-clipboard";
 import { generateTableOfContents } from "src/options/generate-toc-from-content";
 import { copyContentToClipboard } from "src/options/utils/copyContentToClipboard";
-import MyPlugin from "../../main";
+import nlToolsKit from "../../main";
 import { addBackToTopLinkForOtherHeaders, clearBackToTopLink } from "../options/add-back-to-top-link";
 import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/add-back-to-top-link-for";
 import { resolveFrontmatterLinkTextAsLink } from "../options/resolve-frontmatter-link-text-as-external-link";
 import { getYaml } from 'src/options/utils/getYaml';
+import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
 
 
-export const addCommand = (myPlugin: MyPlugin) => {
+export const addCommand = (plugin: nlToolsKit) => {
     // --------Back-to-top link--------
-    myPlugin.addCommand({
+    plugin.addCommand({
         id: '01-add-back-to-top-link-clear',
         name: '添加——回到顶部链接（根据h1标题）',
         callback: () => {
@@ -20,7 +21,7 @@ export const addCommand = (myPlugin: MyPlugin) => {
 
         }
     });
-    myPlugin.addCommand({
+    plugin.addCommand({
         id: '02add-back-to-top-link',
         name: '清除——回到顶部链接（根据h1标题）',
         callback: () => {
@@ -29,7 +30,7 @@ export const addCommand = (myPlugin: MyPlugin) => {
         }
     });
     // --------Copy content added btp link for juejin to clipboard--------
-    myPlugin.addCommand({
+    plugin.addCommand({
         id: '03-add-back-to-top-link-for-juejin',
         name: '复制已添加“回到顶部”链接文档的内容到剪切板（针对掘金平台）',
         callback: async () => {
@@ -37,7 +38,7 @@ export const addCommand = (myPlugin: MyPlugin) => {
         }
     });
     // --------Resolve frontmatter link as Link--------
-    myPlugin.addCommand({
+    plugin.addCommand({
         id: '04-resolve-frontmatter-as-link',
         name: '解析渲染frontmatter外部链接文本为可点击访问的链接（仅阅读模式）',
         callback: () => {
@@ -46,7 +47,7 @@ export const addCommand = (myPlugin: MyPlugin) => {
         }
     });
     // Set line which ends with question mark to h2 header
-    /*  myPlugin.addCommand({
+    /*  nlToolsKit.addCommand({
          id: '05-set-line-end-with-question-mark-to-h2',
          name: '设置以?/？结尾的内容的行作为h2标题',
          callback: () => {
@@ -55,7 +56,7 @@ export const addCommand = (myPlugin: MyPlugin) => {
          }
      }); */
     // --------Copy main body of note to clipboard--------
-    myPlugin.addCommand({
+    plugin.addCommand({
         id: '06-copy-main-body-of-note-and-write-to-clipboard',
         name: '复制正文（不包括yaml区）的内容到剪切板',
         callback: async () => {
@@ -63,8 +64,8 @@ export const addCommand = (myPlugin: MyPlugin) => {
         }
     });
     // --------Get main content with toc--------
-    myPlugin.addCommand({
-        id: '06-copy-main-body-of-note-with-toc-and-write-to-clipboard',
+    plugin.addCommand({
+        id: '07-copy-main-body-of-note-with-toc-and-write-to-clipboard',
         name: '复制带有 TOC 的的正文到剪切板',
         callback: async () => {
             const contents: string = (await getContentsArr()).join('\n');
@@ -73,6 +74,14 @@ export const addCommand = (myPlugin: MyPlugin) => {
             const mainContent: string = await getMainContent() as string;
             const contentWithTOC = `${yaml}\n${toc}\n${mainContent}`;
             copyContentToClipboard(contentWithTOC);
+        }
+    });
+    // --------Insert copyright to blankline --------
+    plugin.addCommand({
+        id: '07-insert-copyright-to-blankline',
+        name: '添加版权信息到文档中空行',
+        callback: async () => {
+            insertCopyright(plugin);
         }
     });
 

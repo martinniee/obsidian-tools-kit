@@ -1,10 +1,10 @@
 // import necessary package : App、Editor, MarkdownView, Modal, Notice, Plugin
 import { Plugin, MarkdownView } from 'obsidian';
 
-// import "MyPluginSettings、 DEFAULT_SETTINGS"
-import { MyPluginSettings, DEFAULT_SETTINGS } from "./src/settings";
-// import "MyPluginSettingsTab" , 
-import { MyPluginSettingsTab } from "./src/settings";
+// import "nlToolsKitSettings、 DEFAULT_SETTINGS"
+import { nlToolsKitSettings, DEFAULT_SETTINGS } from "./src/settings";
+// import "nlToolsKitSettingsTab" , 
+import { nlToolsKitSettingsTab } from "./src/settings";
 
 import { resolveFrontmatterLinkTextAsLink } from "./src/options/resolve-frontmatter-link-text-as-external-link";
 import { addCommand } from "./src/config/addCommand-config";
@@ -17,19 +17,19 @@ interface Listener {
 /**
  * Create plugin object
  */
-export default class MyPlugin extends Plugin {
+export default class nlToolsKit extends Plugin {
 	// set plugin setting object
 	// setings: <settings object  in settings.ts>
-	settings: MyPluginSettings;
+	settings: nlToolsKitSettings;
 
 	/**
 	 * when plugin onload
 	 */
 	async onload() {
 		console.log("-----------Tools Kit plugin loaded...-----------");
-		await this.loadSettings();
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new MyPluginSettingsTab(this.app, this));
+		this.addSettingTab(new nlToolsKitSettingsTab(this.app, this));
+		await this.loadSettings();
 
 
 		// when editor change ,run resolveFrontmatterLinkTextAsLink

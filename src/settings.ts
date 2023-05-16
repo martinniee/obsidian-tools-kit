@@ -1,37 +1,38 @@
 // import necessary package : PluginSettingTab、Setting、App
 import { PluginSettingTab, Setting, App } from 'obsidian';
-// import "MyPlugin"
-import MyPlugin from "../main";
+// import "nlToolsKit"
+import nlToolsKit from "../main";
 /**
  * define interface of the setting option
  */
-export interface MyPluginSettings {
-    // <setting option name: type>
+export interface nlToolsKitSettings {
+    copyrightInfo: string
 }
 
 /**
  * create setting object
  */
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: nlToolsKitSettings = {
     //    all setting option
     // <setting option name: value>
+    copyrightInfo: '',
 
 };
 /**
  * create setting tab object
  */
-export class MyPluginSettingsTab extends PluginSettingTab {
+export class nlToolsKitSettingsTab extends PluginSettingTab {
 
     // set plugin object
     // plugin: <plugin object main.ts >
-    plugin: MyPlugin;
+    plugin: nlToolsKit;
 
     /**
-     * Constructor to create Plugin MyPluginSettingsTab
+     * Constructor to create Plugin nlToolsKitSettingsTab
      * @param app 
      * @param plugin 
      */
-    constructor(app: App, plugin: MyPlugin) {
+    constructor(app: App, plugin: nlToolsKit) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -44,18 +45,17 @@ export class MyPluginSettingsTab extends PluginSettingTab {
         containerEl.empty();
         containerEl.createEl('h2', { text: 'Tools kit Settings' });
 
-        /* new Setting(containerEl)
-            .setName('Deleted Attachment Destination')
-            .setDesc('Select where you want Attachments to be moved once they are deleted')
-            .addDropdown((dropdown) => {
-                dropdown.addOption('permanent', 'Delete Permanently');
-                dropdown.addOption('.trash', 'Move to Obsidian Trash');
-                dropdown.addOption('system-trash', 'Move to System Trash');
-                dropdown.setValue(this.plugin.settings.deleteOption);
-                dropdown.onChange((option) => {
-                    this.plugin.settings.deleteOption = option;
-                    this.plugin.saveSettings();
-                });
-            }); */
+        new Setting(containerEl)
+            .setName('CopyrightInfo Setting')
+            .setDesc('What you insert into blankline of file as copyright content')
+            .addText((text) => {
+                text
+                    .setPlaceholder('Input copyright info here')
+                    .setValue(this.plugin.settings.copyrightInfo)
+                    .onChange(async (value) => {
+                        this.plugin.settings.copyrightInfo = value;
+                        await this.plugin.saveSettings();
+                    })
+            });
     }
 }
