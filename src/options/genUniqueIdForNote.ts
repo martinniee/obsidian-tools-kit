@@ -17,6 +17,7 @@ export const addUniqueIdToFrontmatterField = async (plugin: nlToolsKit) => {
     let isUniqueIdExist = false;
     const uniqueIdField = plugin.settings.uniqueId;
     const frontmatter = await getYamlArr();
+    // when frontmatter does not exist
     if (!frontmatter.length) {
         content = `---\n${uniqueIdField}: ${filenameMD5}\n---\n`;
         app.vault.adapter.write(activeFile.path, content);
@@ -29,9 +30,9 @@ export const addUniqueIdToFrontmatterField = async (plugin: nlToolsKit) => {
         }
     });
     if (!isUniqueIdExist) {
-        frontmatter.push([uniqueIdField, ` ${filenameMD5}`])
+        frontmatter.push([uniqueIdField, `${filenameMD5}`])
     }
-    let yamlsStr = frontmatter.map((field) => field.join(":")).join('\n');
+    let yamlsStr = frontmatter.map((field) => field.join(": ")).join('\n');
     yamlsStr = `---\n${yamlsStr}\n---\n`;
     const contentsStr = await getMainContent();
     content = yamlsStr + contentsStr;
