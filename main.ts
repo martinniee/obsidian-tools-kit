@@ -6,7 +6,7 @@ import { nlToolsKitSettings, DEFAULT_SETTINGS } from "./src/settings";
 // import "nlToolsKitSettingsTab" , 
 import { nlToolsKitSettingsTab } from "./src/settings";
 
-import { resolveFrontmatterLinkTextAsLink } from "./src/options/resolve-frontmatter-link-text-as-external-link";
+import { resolveFrontmatterLinkTextAsLink } from "./src/options/resolveFronmatterLinkAsExternalLink";
 import { addCommand } from "./src/config/addCommand-config";
 
 interface Listener {

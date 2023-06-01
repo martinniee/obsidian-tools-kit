@@ -1,4 +1,3 @@
-
 import { copyContentToClipboard } from './utils/copyContentToClipboard';
 import { getMainContent } from './utils/getMainContent';
 

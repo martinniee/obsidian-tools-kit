@@ -15,7 +15,7 @@ export const insertCopyright = async (plugin: nlToolsKit) => {
 
     for (let i in contentLines) {
         if (contentLines[i].trim().length === 0) {
-            // 1. fill all blank line with copyright info
+            // 1. fill all blank lines with copyright info
             blankLineArr.push(parseInt(i));
             newArr.push(copyrightInfo);
             continue;

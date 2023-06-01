@@ -1,12 +1,12 @@
 import { getContentsArr } from './../options/utils/getContentsAsArr';
 import { getMainContent } from './../options/utils/getMainContent';
-import { copyMainContentToClipboard } from "src/options/copy-main-body-of-note-and-write-to-clipboard";
-import { generateTableOfContents } from "src/options/generate-toc-from-content";
+import { copyMainContentToClipboard } from "src/options/copyMainContentsAndWriteToClipboard";
+import { generateTableOfContents } from "src/options/generateTOC";
 import { copyContentToClipboard } from "src/options/utils/copyContentToClipboard";
 import nlToolsKit from "../../main";
-import { addBackToTopLinkForOtherHeaders, clearBackToTopLink } from "../options/add-back-to-top-link";
-import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/add-back-to-top-link-for";
-import { resolveFrontmatterLinkTextAsLink } from "../options/resolve-frontmatter-link-text-as-external-link";
+import { addBackToTopLinkForOtherHeaders, clearBackToTopLink } from "../options/addBackToTopLink";
+import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/addBackToTopLinkForJuejin";
+import { resolveFrontmatterLinkTextAsLink } from "../options/resolveFronmatterLinkAsExternalLink";
 import { getYaml } from 'src/options/utils/getYaml';
 import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
 import { addUniqueIdToFrontmatterField } from 'src/options/genUniqueIdForNote';
@@ -48,15 +48,6 @@ export const addCommand = (plugin: nlToolsKit) => {
 
         }
     });
-    // Set line which ends with question mark to h2 header
-    /*  nlToolsKit.addCommand({
-         id: '05-set-line-end-with-question-mark-to-h2',
-         name: '设置以?/？结尾的内容的行作为h2标题',
-         callback: () => {
-             SetLineEndWithQMarkToH2Title();
- 
-         }
-     }); */
     // --------Copy main body of note to clipboard--------
     plugin.addCommand({
         id: '06-copy-main-body-of-note-and-write-to-clipboard',
