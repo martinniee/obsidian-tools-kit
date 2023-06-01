@@ -24,3 +24,8 @@ Release 0.2.5 2023/5/16
 -   ✨ feat: numbering heading starting with h2-level
 -   🐞 fix: extract heading from #comment within codefence generate TOC incorrectly
 -   ✨ feat: add value of unique id to specific key in frontmatter by filename with md5
+
+Release 0.3.5 2023/06/01
+
+-   ✨ feat: 增加添加图注文本的功能
+-   🦄 refactor: 重命名文件名使用驼峰命令代替 '-' 命名
