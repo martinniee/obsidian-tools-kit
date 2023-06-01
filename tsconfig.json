@@ -11,8 +11,9 @@
 		"importHelpers": true,
 		"isolatedModules": true,
 		"strictNullChecks": true,
-		"lib": ["DOM", "ES5", "ES6", "ES7"],
+		"lib": ["dom", "es5", "scripthost", "ESNext"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["**/*.ts"]
+	"include": ["**/*.ts"],
+	"exclude": ["node_modules/**/*", "*.config.js", "**/*.js"]
 }

@@ -10,6 +10,7 @@ import { resolveFrontmatterLinkTextAsLink } from "../options/resolve-frontmatter
 import { getYaml } from 'src/options/utils/getYaml';
 import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
 import { addUniqueIdToFrontmatterField } from 'src/options/genUniqueIdForNote';
+import { addImgCaptionText } from 'src/options/addImgCaptionText';
 
 
 export const addCommand = (plugin: nlToolsKit) => {
@@ -91,6 +92,14 @@ export const addCommand = (plugin: nlToolsKit) => {
         name: '根据文件名给指定字段生成MD5唯一id',
         callback: async () => {
             addUniqueIdToFrontmatterField(plugin);
+        }
+    });
+    // --------Add image caption text --------
+    plugin.addCommand({
+        id: '09-add-image-caption-text',
+        name: '添加图注文本',
+        callback: async () => {
+            addImgCaptionText(plugin);
         }
     });
 

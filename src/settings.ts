@@ -7,7 +7,8 @@ import nlToolsKit from "../main";
  */
 export interface nlToolsKitSettings {
     copyrightInfo: string,
-    uniqueId: string;
+    uniqueId: string,
+    imgCaptionSign: string,
 }
 
 /**
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
     // <setting option name: value>
     copyrightInfo: '',
     uniqueId: '',
+    imgCaptionSign: '图',
 };
 /**
  * create setting tab object
@@ -67,6 +69,18 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.uniqueId)
                     .onChange(async (value) => {
                         this.plugin.settings.uniqueId = value;
+                        await this.plugin.saveSettings();
+                    })
+            });
+        new Setting(containerEl)
+            .setName('图注字符')
+            .setDesc("图注的起始字符,可选 '图' 或 'figure' ")
+            .addDropdown((dropdown) => {
+                    dropdown.addOption("图",'图')
+                    dropdown.addOption('figure',"figure")
+                    // dropdown.setValue(this.plugin.settings.imgCaptionSign)
+                    dropdown.onChange(async (option) => {
+                        this.plugin.settings.imgCaptionSign = option;
                         await this.plugin.saveSettings();
                     })
             });
