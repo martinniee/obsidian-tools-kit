@@ -78,7 +78,7 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                     dropdown.addOption("图",'图')
                     dropdown.addOption('figure',"figure")
-                    // dropdown.setValue(this.plugin.settings.imgCaptionSign)
+                    dropdown.setValue(this.plugin.settings.imgCaptionSign)
                     dropdown.onChange(async (option) => {
                         this.plugin.settings.imgCaptionSign = option;
                         await this.plugin.saveSettings();
