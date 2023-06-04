@@ -5,7 +5,7 @@ import { TFile } from "obsidian";
 const Header2Regex = /^## .*\n?/g;
 const imgCaptionWikiRegex = /!\[\[.*\.(png|jpg)(\s+)?(\|([^\d]+))?\]\]/g;
 const imgCaptionMdRegex = /!\[(.*?)\]\(.*\.(jpg|png)\)/g;
-const imgCaptionStrRegex = /(图|figure) \d-\d-.*?/g;
+const imgCaptionStrRegex = /<center>(图|figure) \d-\d-.*?<\/center>/g;
 
 export const addImgCaptionText = async (plugin: nlToolsKit) => {
     const imgCaptionSign = plugin.settings.imgCaptionSign;
@@ -36,7 +36,7 @@ export const addImgCaptionText = async (plugin: nlToolsKit) => {
             const match = imgCaptionWikiRegex.exec(line);
             if (match) {
                 const imgCaption = match[4].trim();
-                const imgCaptionText = `${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}`;
+                const imgCaptionText = `<center>${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}</center>\n`;
                 newFileContents.push(`${line}\n${imgCaptionText}`);
                 continue;
             } else {
@@ -50,7 +50,7 @@ export const addImgCaptionText = async (plugin: nlToolsKit) => {
             const match = imgCaptionMdRegex.exec(line);
             if (match) {
                 const imgCaption = match[1].trim();
-                const imgCaptionText = `${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}`;
+                const imgCaptionText = `<center>${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}</center>\n`;
                 newFileContents.push(`${line}\n${imgCaptionText}`);
                 continue;
             } else {
@@ -77,5 +77,7 @@ export const removeAllImgCaptionText = async (activeFile: TFile) => {
             return line;
         }
     }).filter(i => i != "delete imgCaption") as string[];
+    console.log("newFileContents: ",newFileContents);
+    
     app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
 }
