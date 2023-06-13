@@ -1,7 +1,6 @@
 import { getContentsArr } from './../options/utils/getContentsAsArr';
 import { getMainContent } from './../options/utils/getMainContent';
 import { copyMainContentToClipboard } from "src/options/copyMainContentsAndWriteToClipboard";
-import { generateTableOfContents } from "src/options/generateTOC";
 import { copyContentToClipboard } from "src/options/utils/copyContentToClipboard";
 import nlToolsKit from "../../main";
 import { addBackToTopLinkForOtherHeaders, clearBackToTopLink } from "../options/addBackToTopLink";
@@ -11,6 +10,7 @@ import { getYaml } from 'src/options/utils/getYaml';
 import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
 import { addUniqueIdToFrontmatterField } from 'src/options/genUniqueIdForNote';
 import { addImgCaptionText } from 'src/options/addImgCaptionText';
+import { insertToc } from 'src/options/generateTOC';
 
 
 export const addCommand = (plugin: nlToolsKit) => {
@@ -56,17 +56,12 @@ export const addCommand = (plugin: nlToolsKit) => {
             copyMainContentToClipboard();
         }
     });
-    // --------Get main content with toc--------
+    // --------insert toc in markdown style--------
     plugin.addCommand({
-        id: '07-copy-main-body-of-note-with-toc-and-write-to-clipboard',
-        name: '复制带有 TOC 的的正文到剪切板',
+        id: '07-insert-toc-in-markdown-style',
+        name: '添加mardown风格的toc（table of content）',
         callback: async () => {
-            const contents: string = (await getContentsArr()).join('\n');
-            const yaml: string = await getYaml();
-            const toc: string = await generateTableOfContents();
-            const mainContent: string = await getMainContent() as string;
-            const contentWithTOC = `${yaml}\n${toc}\n${mainContent}`;
-            copyContentToClipboard(contentWithTOC);
+            insertToc()
         }
     });
     // --------Insert copyright to blankline --------
