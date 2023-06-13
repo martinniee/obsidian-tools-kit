@@ -1,6 +1,6 @@
 import { MarkdownView } from "obsidian";
 import { getContentsArr } from "./utils/getContentsAsArr";
-import { getFirstH1HeadingPostion } from "./utils/utils";
+import { fileContentsProcess, getFirstH1HeadingPostion } from "./utils/utils";
 
 /**
  * Generate table of content in markdown style
@@ -21,14 +21,15 @@ const generateTableOfContents = async (): Promise<string> => {
 	}
 	const markdownToc = toc
 		.map((heading) => {
-			const { text, level } = heading;
-			const id = text.toLowerCase().replace(/\s+/g, "-"); // Generate an ID for the heading by converting the text to lowercase and replacing spaces with hyphens
-			return `${"  ".repeat(level - 1)}- [${text}](#${id})`; // Use the ID to create a link to the heading
+			let { text, level } = heading;
+			text = text.replace(" ", "%20");
+			return `${"  ".repeat(level - 1)}- [${text}](#${text})`; // Use the ID to create a link to the heading
 		})
 		.join("\n");
 	return markdownToc;
 };
-export const insertToc = async () => {
+const insertToc = async () => {
+	clearToc();
 	const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 	const toc = await generateTableOfContents();
 	const finalToc = `**TOC**\n${toc}\n`;
@@ -40,4 +41,35 @@ export const insertToc = async () => {
 			ch: 0,
 		});
 	}
+};
+const clearToc = (): Promise<void> => {
+	let isInToc = false;
+	fileContentsProcess((line: string): string => {
+		const tocItemRegex = /(?:  ?)+- \[(((\d\.)+\d-)?(.*))\]\(#\1\)/g;
+		if (line.startsWith("**TOC**")) {
+			isInToc = !isInToc;
+			return "";
+		}
+		if (tocItemRegex.test(line) && isInToc) {
+			return "DELETED_LINE";
+		}
+		if (line.startsWith("# ")) {
+			isInToc = false;
+		}
+		if (!isInToc) {
+			return line;
+		}
+		return line;
+	});
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve();
+		}, 2000);
+	});
+};
+/**
+ * Add table  of content to previous line of h1 heading
+ */
+export const addToc = () => {
+	clearToc().then(insertToc);
 };

@@ -25,9 +25,10 @@ export const fileContentsProcess = async (
 ) => {
 	const activeFile: TFile = app.workspace.getActiveFile() as TFile;
 	const fileContents = (await app.vault.read(activeFile)).split("\n");
-	const newFileContents: string[] = [];
+	let newFileContents: string[] = [];
 	for (let line of fileContents) {
 		newFileContents.push(callback(line));
-	}
+    }
+    newFileContents =  newFileContents.filter(item=> item !='DELETED_LINE')
 	app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
 };
