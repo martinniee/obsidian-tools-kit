@@ -29,7 +29,6 @@ const generateTableOfContents = async (): Promise<string> => {
 	return markdownToc;
 };
 const insertToc = async () => {
-	clearToc();
 	const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 	const toc = await generateTableOfContents();
 	const finalToc = `**TOC**\n${toc}\n`;
@@ -42,9 +41,9 @@ const insertToc = async () => {
 		});
 	}
 };
-const clearToc = (): Promise<void> => {
+const removeToc = (): Promise<void> => {
 	let isInToc = false;
-	fileContentsProcess((line: string): string => {
+	return fileContentsProcess((line: string): string => {
 		const tocItemRegex = /(?:  ?)+- \[(((\d\.)+\d-)?(.*))\]\(#\1\)/g;
 		if (line.startsWith("**TOC**")) {
 			isInToc = !isInToc;
@@ -60,16 +59,11 @@ const clearToc = (): Promise<void> => {
 			return line;
 		}
 		return line;
-	});
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve();
-		}, 2000);
-	});
+	}, true);
 };
 /**
  * Add table  of content to previous line of h1 heading
  */
 export const addToc = () => {
-	clearToc().then(insertToc);
+	removeToc().then(insertToc);
 };
