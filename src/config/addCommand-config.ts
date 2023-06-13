@@ -10,7 +10,7 @@ import { getYaml } from 'src/options/utils/getYaml';
 import { insertCopyright } from 'src/options/insertCopyrightToBlankline';
 import { addUniqueIdToFrontmatterField } from 'src/options/genUniqueIdForNote';
 import { addImgCaptionText } from 'src/options/addImgCaptionText';
-import { insertToc } from 'src/options/generateTOC';
+import { addToc } from 'src/options/generateTOC';
 
 
 export const addCommand = (plugin: nlToolsKit) => {
@@ -61,7 +61,7 @@ export const addCommand = (plugin: nlToolsKit) => {
         id: '07-insert-toc-in-markdown-style',
         name: '添加mardown风格的toc（table of content）',
         callback: async () => {
-            insertToc()
+            addToc()
         }
     });
     // --------Insert copyright to blankline --------
