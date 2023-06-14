@@ -48,3 +48,7 @@ Release 0.4.1 2023/06/14
 -   ✨ feat: enhancing function to process async operation
 -   ✨ feat: enhancing to remove existed toc before adding
 -   ✨ feat: enhancing to remove existed numbers as prefix of heading before adding
+
+Release 0.4.2 2023/06/14
+
+-   🐞 fix: no replace all blankspaces to heading title when generating toc
