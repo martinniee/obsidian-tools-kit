@@ -22,7 +22,7 @@ const generateTableOfContents = async (): Promise<string> => {
 	const markdownToc = toc
 		.map((heading) => {
 			let { text, level } = heading;
-			text = text.replace(" ", "%20");
+			text = text.replace(/ +/g, "%20");
 			return `${"  ".repeat(level - 1)}- [${text}](#${text})`; // Use the ID to create a link to the heading
 		})
 		.join("\n");
