@@ -42,3 +42,9 @@ Release 0.4.0 2023/06/14
 -   ✨ feat: 新增 “编号标题”功能
 -   ✨ feat: 新增“ 清除已有 TOC” 功能
 -   🦄 refactor: 使用 “文件处理工具方法” 重构 back2top link 的实现
+
+Release 0.4.1 2023/06/14
+
+-   ✨ feat: enhancing function to process async operation
+-   ✨ feat: enhancing to remove existed toc before adding
+-   ✨ feat: enhancing to remove existed numbers as prefix of heading before adding
