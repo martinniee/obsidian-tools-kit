@@ -9,8 +9,8 @@ import { resolveFrontmatterLinkTextAsLink } from "../options/resolveFronmatterLi
 import { insertCopyright } from "src/options/insertCopyrightToBlankline";
 import { addUniqueIdToFrontmatterField } from "src/options/genUniqueIdForNote";
 import { addImgCaptionText } from "src/options/addImgCaptionText";
-import { addToc } from "src/options/generateTOC";
-import { addHeadingNum } from "src/options/numberingHeadings";
+import { insertToc } from "src/options/generateTOC";
+import { numberingHeadings } from "src/options/numberingHeadings";
 
 export const addCommand = (plugin: nlToolsKit) => {
 	// --------Back-to-top link--------
@@ -57,7 +57,7 @@ export const addCommand = (plugin: nlToolsKit) => {
 		id: "07-insert-toc-in-markdown-style",
 		name: "添加mardown风格的toc（table of content）",
 		callback: async () => {
-			addToc();
+			insertToc();
 		},
 	});
 	// --------Insert copyright to blankline --------
@@ -89,7 +89,7 @@ export const addCommand = (plugin: nlToolsKit) => {
 		id: "10-numbering-headings",
 		name: "编号所有标题（headings）",
 		callback: async () => {
-			addHeadingNum();
+			numberingHeadings.process();
 		},
 	});
 };
