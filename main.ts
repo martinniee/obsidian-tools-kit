@@ -8,6 +8,7 @@ import { nlToolsKitSettingsTab } from "./src/settings";
 
 import { resolveFrontmatterLinkTextAsLink } from "./src/options/resolveFronmatterLinkAsExternalLink";
 import { addCommand } from "./src/config/addCommand-config";
+import { addContextMenus } from 'src/config/addMenus';
 
 interface Listener {
 
@@ -56,6 +57,8 @@ export default class MyPlugin extends Plugin {
 		}))
 		// register all 'add command' commands from   addCommand-config.ts
 		addCommand(this);
+		// register all 'add command' commands from   addCommand-config.ts
+		addContextMenus(this);
 
 	}
 	/**
