@@ -1,8 +1,6 @@
+import MyPlugin from "main";
 import { TFile } from "obsidian";
-interface metaData {
-	h1Title: string;
-	flag: boolean;
-}
+
 /**
  *
  * @returns Index where the first h1 heading at
@@ -19,35 +17,89 @@ export const getFirstH1HeadingPostion = async (): Promise<number> => {
 	}
 	return lineNum;
 };
-
+type removeFun = () => Promise<string>;
+interface metaData {
+	[propName: string]: {
+		value: any;
+	};
+}
+export interface processFunc {
+	(line: string, metaData: metaData, plugin: MyPlugin): Promise<
+		string | void
+	>;
+}
 /**
- * File contents processing method
- * callback: (line:string,plugin?:Plugin,globalVariable?:{})
- * @param callback custom contents processing function
- * @param isRePromise determing whether return promise
- * @param delay delay time
- * @returns
+ * File contents processing class
  */
-export const fileContentsProcess = async (
-	callback: any,
-	isRePromise?: boolean,
-	delay?: number
-): Promise<void> => {
-	const activeFile: TFile = app.workspace.getActiveFile() as TFile;
-	const fileContents = (await app.vault.read(activeFile)).split("\n");
-	let newFileContents: string[] = [];
-	const metadata = { flag: false };
-	if (!delay) delay = 1000; // no delay passed, set 1000 ms as default
-	for (let line of fileContents) {
-		newFileContents.push(callback(line, metadata));
+export class fileContentsProcess {
+	#processFunc: processFunc;
+	#delay: number = 1000;
+	#metaData: metaData;
+	#plugin: MyPlugin;
+	#line: string;
+	#removeObj: any;
+	constructor(
+		callback: processFunc, // function for core-logic for  text processsing
+		metaData: metaData = {},
+		delay: number = 1000, // if no value is passed, set 1000 as default
+		removeObj?: fileContentsProcess
+	) {
+		this.#processFunc = callback;
+		this.#delay = delay;
+		this.#metaData = metaData;
+		this.#removeObj = removeObj as fileContentsProcess;
 	}
-	newFileContents = newFileContents.filter((item) => item != "DELETED_LINE");
-	app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
-	if (isRePromise) {
-		return new Promise((resolve, reject) => {
-			setTimeout(() => {
-				resolve();
-			}, delay);
-		});
+
+	async process(): Promise<any> {
+		const activeFile: TFile = app.workspace.getActiveFile() as TFile;
+		const fileContents = (await app.vault.read(activeFile)).split("\n");
+		let newFileContents: string[] = [];
+		if (
+			typeof this.#removeObj === "object" &&
+			this.#removeObj instanceof fileContentsProcess
+		)
+			await this.#removeObj.process();
+		this.resetMetaData();
+		for (let line of fileContents) {
+			this.#line = line;
+			newFileContents.push(
+				(await this.#processFunc(
+					this.#line,
+					this.#metaData,
+					this.#plugin
+				)) as unknown as any
+			);
+		}
+		newFileContents = newFileContents.filter((item) => item != undefined);
+		app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
+		setTimeout(() => {
+			return "";
+		}, this.#delay);
 	}
-};
+	resetMetaData(): void {
+		for (const prop in this.#metaData) {
+			if (this.#metaData[prop].value instanceof Array) {
+				// Reset all values in prop.value preventing heading number increment
+				this.#metaData[prop].value = this.#metaData[prop].value.map(
+					(item: any) => {
+						if (typeof item === "number") {
+							return 0;
+						} else if (typeof item === "string") {
+							return "";
+						}
+						return item;
+					}
+				);
+			}
+			if (typeof this.#metaData[prop].value === "number") {
+				this.#metaData[prop].value = 0;
+			}
+			if (typeof this.#metaData[prop].value === "string") {
+				this.#metaData[prop].value = "0";
+			}
+			if (typeof this.#metaData[prop].value === "boolean") {
+				this.#metaData[prop].value = false;
+			}
+		}
+	}
+}
