@@ -52,3 +52,9 @@ Release 0.4.1 2023/06/14
 Release 0.4.2 2023/06/14
 
 -   🐞 fix: no replace all blankspaces to heading title when generating toc
+
+Realease 0.4.3 2023/06/17
+
+-   🦄 refactor: create a class for dedicated usage in text-processing
+-   ✨ feat: create config file for dedicated context menu adding
+-   🦄 refactor: refactor toc ,numbering headings operation with new encapsulated tool class. enhancing some functions
