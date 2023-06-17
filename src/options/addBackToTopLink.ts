@@ -1,4 +1,4 @@
-import { fileContentsProcess } from "./utils/utils";
+import { fileContentsProcess } from "../utils";
 export const deleteBackToTopLink = new fileContentsProcess(
 	async (line, metaData, plugin) => {
 		const back2TopLinkRegex = new RegExp(

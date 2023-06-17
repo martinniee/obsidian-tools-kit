@@ -1,4 +1,4 @@
-import { fileContentsProcess } from "./utils/utils";
+import { fileContentsProcess } from "../utils";
 
 export const numberingHeadings = new fileContentsProcess(
 	async (line, metaData) => {

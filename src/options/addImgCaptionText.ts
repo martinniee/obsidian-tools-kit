@@ -1,6 +1,6 @@
 import nlToolsKit from 'main';
-import { getContentsArr } from './utils/getContentsAsArr';
 import { TFile } from "obsidian";
+import { getContentsArr } from '../utils';
 
 const Header2Regex = /^## .*\n?/g;
 const imgCaptionWikiRegex = /!\[\[.*\.(png|jpg)(\s+)?(\|([^\d]+))?\]\]/g;

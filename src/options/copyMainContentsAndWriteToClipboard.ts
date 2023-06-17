@@ -1,6 +1,4 @@
-import { copyContentToClipboard } from './utils/copyContentToClipboard';
-import { getMainContent } from './utils/getMainContent';
-
+import { copyContentToClipboard, getMainContent } from "src/utils";
 
 /**
  * Copy main body of note to clipboard

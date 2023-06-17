@@ -1,8 +1,6 @@
-import { getMainContent } from './utils/getMainContent';
 import nlToolsKit from 'main';
 import { TFile } from "obsidian";
-import { genenerateUniqueId } from "./utils/genUniqueId";
-import { getYamlArr } from './utils/getYaml';
+import { genenerateUniqueId, getMainContent, getYamlArr } from 'src/utils';
 
 const generateUniqueIdForNote = () => {
     const activeFile: TFile = app.workspace.getActiveFile() as TFile;

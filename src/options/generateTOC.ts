@@ -1,6 +1,5 @@
 import { MarkdownView } from "obsidian";
-import { getContentsArr } from "./utils/getContentsAsArr";
-import { fileContentsProcess, getFirstH1HeadingPostion } from "./utils/utils";
+import { fileContentsProcess, getContentsArr, getFirstH1HeadingPostion } from "../utils";
 
 /**
  * Generate table of content in markdown style

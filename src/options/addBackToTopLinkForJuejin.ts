@@ -1,6 +1,4 @@
-import { copyContentToClipboard } from './utils/copyContentToClipboard';
-import { getMainContent } from './utils/getMainContent';
-
+import { copyContentToClipboard, getMainContent } from "src/utils";
 
 /**
  * --------Add back to top link for juejin--------

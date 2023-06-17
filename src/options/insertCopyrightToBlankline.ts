@@ -1,6 +1,6 @@
-import { getContentsArr } from './utils/getContentsAsArr';
 import nlToolsKit from "main";
 import { TFile } from "obsidian";
+import { getContentsArr } from "src/utils";
 /**
  * 
  * @param plugin 
