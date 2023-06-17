@@ -68,3 +68,8 @@ Release 0.4.4 2023/06/18
 -   🐞 fix: insert TOC to unexpectd postion ; add index for indexing in callback
 -   🦄 refactor: code for image caption operation
 -   ✨ feat: use editor context menu instead of using command palette
+
+Release 0.4.5 2023/06/18
+
+-   🐞 fix: remain DELETE_LINE after executing the 'Markdown Toc: Delete ' command
+-   🌈 style: change 'TO' to 'To'
