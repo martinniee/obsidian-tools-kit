@@ -1,5 +1,9 @@
 import { MarkdownView } from "obsidian";
-import { fileContentsProcess, getContentsArr, getFirstH1HeadingPostion } from "../utils";
+import {
+	fileContentsProcess,
+	getContentsArr,
+	getFirstH1HeadingPostion,
+} from "../utils";
 
 /**
  * Generate table of content in markdown style
@@ -37,14 +41,14 @@ export const removeToc = new fileContentsProcess(
 			metaData.tocCount.value++;
 			if (metaData.tocCount.value === 1) {
 				metaData.isInToc.value = !metaData.isInToc.value;
-				return ;
+				return "DELELE_LINE";
 			}
 			if (metaData.isInToc.value) {
-				return ;
+				return "DELELE_LINE";
 			}
 		}
 		if (tocItemRegex.test(line) && metaData.isInToc.value) {
-			return;
+			return "DELELE_LINE";
 		}
 		if (!metaData.isInToc.value) {
 			return line;

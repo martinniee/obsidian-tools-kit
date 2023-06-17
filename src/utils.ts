@@ -2,8 +2,7 @@ import nlToolsKit from "main";
 import { Notice, TFile } from "obsidian";
 import CryptoJS from "crypto-js";
 
-type removeFun = () => Promise<string>;
-interface metaData {
+export interface metaData {
 	[propName: string]: {
 		value: any;
 	};
@@ -59,7 +58,7 @@ export class fileContentsProcess {
 			)) as any;
 			newFileContents.push(result);
 		}
-		newFileContents = newFileContents.filter((item) => item != undefined);
+		newFileContents = newFileContents.filter((item) => item != 'DELETE_LINE');
 		app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
 		setTimeout(() => {
 			return "";
@@ -107,7 +106,7 @@ export const getContentsArr = async (): Promise<string[]> => {
 	const activeMd: TFile = app.workspace.getActiveFile() as TFile;
 	const origin_filecontents = await app.vault.read(activeMd);
 	return origin_filecontents.split("\n");
-};2023/06/17
+};
 /**
  * Get the main contents except the frontmatter
  */
