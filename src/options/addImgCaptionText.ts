@@ -77,7 +77,5 @@ export const removeAllImgCaptionText = async (activeFile: TFile) => {
             return line;
         }
     }).filter(i => i != "delete imgCaption") as string[];
-    console.log("newFileContents: ",newFileContents);
-    
     app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
 }
