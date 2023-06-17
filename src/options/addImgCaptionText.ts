@@ -1,81 +1,75 @@
-import nlToolsKit from 'main';
-import { TFile } from "obsidian";
-import { getContentsArr } from '../utils';
+import nlToolsKit from "main";
+import { fileContentsProcess, processFunc } from "../utils";
+import type { metaData } from "../utils";
+export const deleteImageCaptionText = new fileContentsProcess(async (line) => {
+	const targetDeletedImgCaptionStrRegex =
+		/<center>(图 |figure )\d-\d-.*?<\/center>/;
+	if (targetDeletedImgCaptionStrRegex.test(line)) {
+		return "DELETE_LINE";
+	}
+	return line;
+});
+export const addImgCaptionText = new fileContentsProcess(
+	async (line, metaData, plugin) => {
+		const header2Regex = /^##( +).*\n?/m;
+		if (header2Regex.test(line)) {
+			metaData.imgCaptionNum.value[0]++;
+			metaData.imgCaptionNum.value[1] = 0;
+			return line;
+		}
+		const imgCaptionWikiRegex =
+			/!\[\[ *(?<backupCaption>.*)\.(?:png|jpg)(?:(?: *\| *)(?<caption>.*?)(?: *))?(?:(?: *\| *)(?:(?:\d+|\d+x\d+)?)(?: *))? *\]\]/;
+		const imgCaptionMdRegex =
+			/!\[(?: *(?:(?<caption>(?:.| *)*?) *))(?:\|? *(?:\d+|\d+x\d+) *)?\]\((?:(?<backupCaption>.*)\.(?:png|jpg))\)/;
 
-const Header2Regex = /^## .*\n?/g;
-const imgCaptionWikiRegex = /!\[\[.*\.(png|jpg)(\s+)?(\|([^\d]+))?\]\]/g;
-const imgCaptionMdRegex = /!\[(.*?)\]\(.*\.(jpg|png)\)/g;
-const imgCaptionStrRegex = /<center>(图|figure) \d-\d-.*?<\/center>/g;
-
-export const addImgCaptionText = async (plugin: nlToolsKit) => {
-    const imgCaptionSign = plugin.settings.imgCaptionSign;
-    const activeFile: TFile = app.workspace.getActiveFile() as TFile;
-    // removing all existed image caption texts before adding to 
-    await removeAllImgCaptionText(activeFile);
-    const fileContents = await getContentsArr();
-    const newFileContents: string[] = [];
-
-    let imgCaptionNum1 = 0; // chapter number,default is 0, increment by 1 when the line is header2 level
-    let imgCaptionNum2 = 0; // image number ,default is 0, increment by 1 when coming across image reference link line
-    // iterate
-    for (const line of fileContents) {
-        // resetting all the lastIndex value to 0
-        imgCaptionMdRegex.lastIndex = 0;
-        imgCaptionWikiRegex.lastIndex = 0;
-        Header2Regex.lastIndex = 0;
-
-        if (Header2Regex.test(line)) {
-            imgCaptionNum1++;
-            imgCaptionNum2 = 0;
-            newFileContents.push(line);
-            continue;
-        }
-        else if (imgCaptionWikiRegex.test(line)) {
-            imgCaptionNum2++;
-            imgCaptionWikiRegex.lastIndex = 0;
-            const match = imgCaptionWikiRegex.exec(line);
-            if (match) {
-                const imgCaption = match[4].trim();
-                const imgCaptionText = `<center>${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}</center>\n`;
-                newFileContents.push(`${line}\n${imgCaptionText}`);
-                continue;
-            } else {
-                newFileContents.push(line);
-                continue;
-            }
-        }
-        else if (imgCaptionMdRegex.test(line)) {
-            imgCaptionNum2++;
-            imgCaptionMdRegex.lastIndex = 0;
-            const match = imgCaptionMdRegex.exec(line);
-            if (match) {
-                const imgCaption = match[1].trim();
-                const imgCaptionText = `<center>${imgCaptionSign} ${imgCaptionNum1}-${imgCaptionNum2}-${imgCaption}</center>\n`;
-                newFileContents.push(`${line}\n${imgCaptionText}`);
-                continue;
-            } else {
-                newFileContents.push(line);
-                continue;
-            }
-        } else {
-            newFileContents.push(line);
-            continue;
-        }
-    }
-    app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
-}
-
-export const removeAllImgCaptionText = async (activeFile: TFile) => {
-    const fileContents = await getContentsArr()
-    let newFileContents: string[] = [];
-    newFileContents = fileContents.map((line) => {
-        imgCaptionStrRegex.lastIndex = 0;
-        const match = imgCaptionStrRegex.exec(line);
-        if (match) {
-            return "delete imgCaption";
-        } else {
-            return line;
-        }
-    }).filter(i => i != "delete imgCaption") as string[];
-    app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
-}
+		// If the current line is not the line including image reference link, return it
+		if (
+			!imgCaptionProcess(imgCaptionWikiRegex, line, metaData, plugin) &&
+			!imgCaptionProcess(imgCaptionMdRegex, line, metaData, plugin)
+		) {
+			return line;
+		}
+		return (
+			imgCaptionProcess(imgCaptionWikiRegex, line, metaData, plugin) ||
+			imgCaptionProcess(imgCaptionMdRegex, line, metaData, plugin)
+		);
+	},
+	{
+		imgCaptionNum: {
+			value: [0, 0],
+		},
+	}
+);
+/**
+ *
+ * @param line
+ * @param metaData
+ * @param plugin
+ * @returns
+ */
+const imgCaptionProcess = (
+	imgLinkRegex: RegExp,
+	line: string,
+	metaData?: metaData,
+	plugin?: nlToolsKit
+): string | undefined => {
+	let imgCaptionText = "";
+	if (imgLinkRegex.test(line)) {
+		metaData?.imgCaptionNum.value[1] + 1;
+		const match = imgLinkRegex.exec(line);
+		/**
+		 * 1. caption exists, set file basename ( aaa from  aaa.png ) as caption
+		 * 2. caption exists, but acctually scale for image, set filename as caption
+		 */
+		if (!match?.groups?.caption || /\d+/.test(match?.groups?.caption)) {
+			const imgBasenameRegex =
+				/(?:(?:(?:.|..)\/)*(?:.*\/)|^)(?<text>.*)/m;
+			imgCaptionText = imgBasenameRegex.exec(
+				match?.groups?.backupCaption as string
+			)?.groups?.text as string;
+		} else {
+			imgCaptionText = match?.groups?.caption as string;
+		}
+		return `${line}\n<center>${plugin?.settings.imgCaptionSign} ${metaData?.imgCaptionNum.value[0]}-${metaData?.imgCaptionNum.value[1]}-${imgCaptionText}</center>\n`;
+	}
+};
