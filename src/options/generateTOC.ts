@@ -41,14 +41,14 @@ export const removeToc = new fileContentsProcess(
 			metaData.tocCount.value++;
 			if (metaData.tocCount.value === 1) {
 				metaData.isInToc.value = !metaData.isInToc.value;
-				return "DELELE_LINE";
+				return "DELETE_LINE";
 			}
 			if (metaData.isInToc.value) {
-				return "DELELE_LINE";
+				return "DELETE_LINE";
 			}
 		}
 		if (tocItemRegex.test(line) && metaData.isInToc.value) {
-			return "DELELE_LINE";
+			return "DELETE_LINE";
 		}
 		if (!metaData.isInToc.value) {
 			return line;
