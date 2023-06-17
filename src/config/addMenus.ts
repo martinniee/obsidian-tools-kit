@@ -9,6 +9,7 @@ import {
 	addBackToTopLink,
 	deleteBackToTopLink,
 } from "src/options/addBackToTopLink";
+import { addImgCaptionText, deleteImageCaptionText } from "src/options/addImgCaptionText";
 export const addContextMenus = (plugin: nlToolsKit) => {
 	plugin.registerEvent(
 		plugin.app.workspace.on(
@@ -37,7 +38,7 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 						});
 				});
 				menu.addItem((item) => {
-					item.setTitle("Mardown TOC: Delete")
+					item.setTitle("Markdown TOC: Delete")
 						.setIcon("list")
 						.onClick(async () => {
 							await removeToc.process();
@@ -48,7 +49,7 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 					item.setTitle("Back TO Top: Insert/Update")
 						.setIcon("corner-right-up")
 						.onClick(async () => {
-							await addBackToTopLink.process(plugin as nlToolsKit);
+							await addBackToTopLink.process(plugin);
 						});
 				});
 				menu.addItem((item) => {
@@ -56,6 +57,22 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 						.setIcon("corner-right-up")
 						.onClick(async () => {
 							await deleteBackToTopLink.process(plugin as nlToolsKit);
+						});
+				});
+				// Image Caption
+				menu.addItem((item) => {
+					item.setTitle("Image Caption: Insert/Update")
+						.setIcon("subtitles")
+						.onClick(async () => {
+							await deleteImageCaptionText.process(plugin);
+							await addImgCaptionText.process(plugin);
+						});
+				});
+				menu.addItem((item) => {
+					item.setTitle("Image Caption: Delete")
+						.setIcon("subtitles")
+						.onClick(async () => {
+							await deleteImageCaptionText.process(plugin);
 						});
 				});
 			}

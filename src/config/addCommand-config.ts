@@ -10,21 +10,6 @@ import { insertToc } from "src/options/generateTOC";
 import { numberingHeadings } from "src/options/numberingHeadings";
 
 export const addCommand = (plugin: nlToolsKit) => {
-	// --------Back-to-top link--------
-	plugin.addCommand({
-		id: "01-add-back-to-top-link-clear",
-		name: "添加——回到顶部链接（back2top）",
-		callback: async () => {
-			await addBackToTopLink.process(plugin);
-		},
-	});
-	plugin.addCommand({
-		id: "02add-back-to-top-link",
-		name: "清除——回到顶部链接（back2top）",
-		callback: () => {
-			deleteBackToTopLink.process(plugin);
-		},
-	});
 	// --------Copy content added btp link for juejin to clipboard--------
 	plugin.addCommand({
 		id: "03-add-back-to-top-link-for-juejin",
@@ -49,14 +34,6 @@ export const addCommand = (plugin: nlToolsKit) => {
 			copyMainContentToClipboard();
 		},
 	});
-	// --------insert toc in markdown style--------
-	plugin.addCommand({
-		id: "07-insert-toc-in-markdown-style",
-		name: "添加mardown风格的toc（table of content）",
-		callback: async () => {
-			insertToc();
-		},
-	});
 	// --------Insert copyright to blankline --------
 	plugin.addCommand({
 		id: "07-insert-copyright-to-blankline",
@@ -71,22 +48,6 @@ export const addCommand = (plugin: nlToolsKit) => {
 		name: "根据文件名给指定字段生成MD5唯一id",
 		callback: async () => {
 			addUniqueIdToFrontmatterField(plugin);
-		},
-	});
-	// --------Add image caption text --------
-	plugin.addCommand({
-		id: "09-add-image-caption-text",
-		name: "添加图注文本（caption）",
-		callback: async () => {
-			addImgCaptionText(plugin);
-		},
-	});
-	// ------- Numbering headings --------
-	plugin.addCommand({
-		id: "10-numbering-headings",
-		name: "编号所有标题（headings）",
-		callback: async () => {
-			numberingHeadings.process();
 		},
 	});
 };
