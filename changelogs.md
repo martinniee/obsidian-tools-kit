@@ -53,8 +53,18 @@ Release 0.4.2 2023/06/14
 
 -   🐞 fix: no replace all blankspaces to heading title when generating toc
 
-Realease 0.4.3 2023/06/17
+Release 0.4.3 2023/06/17
 
 -   🦄 refactor: create a class for dedicated usage in text-processing
 -   ✨ feat: create config file for dedicated context menu adding
 -   🦄 refactor: refactor toc ,numbering headings operation with new encapsulated tool class. enhancing some functions
+
+Release 0.4.4 2023/06/18
+
+-   🦄 refactor: factor with new tool class
+-   ✨ feat: support to use plugin instance in the callback for settings data
+-   🌈 style: remove console.log
+-   🦄 refactor: place all tool function/code to utils.ts
+-   🐞 fix: insert TOC to unexpectd postion ; add index for indexing in callback
+-   🦄 refactor: code for image caption operation
+-   ✨ feat: use editor context menu instead of using command palette
