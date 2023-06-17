@@ -1,4 +1,4 @@
-import MyPlugin from "main";
+import nlToolsKit from "main";
 import { TFile } from "obsidian";
 
 /**
@@ -24,7 +24,7 @@ interface metaData {
 	};
 }
 export interface processFunc {
-	(line: string, metaData: metaData, plugin: MyPlugin): Promise<
+	(line: string, metaData: metaData, plugin: nlToolsKit): Promise<
 		string | void
 	>;
 }
@@ -35,8 +35,8 @@ export class fileContentsProcess {
 	#processFunc: processFunc;
 	#delay: number = 1000;
 	#metaData: metaData;
-	#plugin: MyPlugin;
 	#line: string;
+	// #plugin: nlToolsKit;
 	#removeObj: any;
 	constructor(
 		callback: processFunc, // function for core-logic for  text processsing
@@ -46,11 +46,11 @@ export class fileContentsProcess {
 	) {
 		this.#processFunc = callback;
 		this.#delay = delay;
-		this.#metaData = metaData;
+		this.#metaData = metaData as metaData;
 		this.#removeObj = removeObj as fileContentsProcess;
 	}
 
-	async process(): Promise<any> {
+	async process(plugin?: nlToolsKit): Promise<any> {
 		const activeFile: TFile = app.workspace.getActiveFile() as TFile;
 		const fileContents = (await app.vault.read(activeFile)).split("\n");
 		let newFileContents: string[] = [];
@@ -66,8 +66,9 @@ export class fileContentsProcess {
 				(await this.#processFunc(
 					this.#line,
 					this.#metaData,
-					this.#plugin
-				)) as unknown as any
+					plugin as nlToolsKit
+					// this.#plugin
+				)) as any
 			);
 		}
 		newFileContents = newFileContents.filter((item) => item != undefined);
