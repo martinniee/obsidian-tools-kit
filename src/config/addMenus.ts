@@ -2,12 +2,16 @@ import {
 	numberingHeadings,
 	removeHeadingNum,
 } from "./../options/numberingHeadings";
-import { Editor, ItemView, MarkdownView, Menu } from "obsidian";
+import { Editor, MarkdownView, Menu } from "obsidian";
 import nlToolsKit from "../../main";
 import { insertToc, removeToc } from "src/options/generateTOC";
-export const addContextMenus = (__this: nlToolsKit) => {
-	__this.registerEvent(
-		__this.app.workspace.on(
+import {
+	addBackToTopLink,
+	deleteBackToTopLink,
+} from "src/options/addBackToTopLink";
+export const addContextMenus = (plugin: nlToolsKit) => {
+	plugin.registerEvent(
+		plugin.app.workspace.on(
 			"editor-menu",
 			(menu: Menu, _: Editor, view: MarkdownView) => {
 				menu.addItem((item) => {
@@ -29,9 +33,7 @@ export const addContextMenus = (__this: nlToolsKit) => {
 					item.setTitle("Markdown TOC: Insert/Update")
 						.setIcon("list")
 						.onClick(async () => {
-							console.log(1111111111);
 							await insertToc();
-							console.log(22222222222);
 						});
 				});
 				menu.addItem((item) => {
@@ -39,6 +41,21 @@ export const addContextMenus = (__this: nlToolsKit) => {
 						.setIcon("list")
 						.onClick(async () => {
 							await removeToc.process();
+						});
+				});
+				// Back TO Top
+				menu.addItem((item) => {
+					item.setTitle("Back TO Top: Insert/Update")
+						.setIcon("corner-right-up")
+						.onClick(async () => {
+							await addBackToTopLink.process(plugin as nlToolsKit);
+						});
+				});
+				menu.addItem((item) => {
+					item.setTitle("Back TO Top: Delete")
+						.setIcon("corner-right-up")
+						.onClick(async () => {
+							await deleteBackToTopLink.process(plugin as nlToolsKit);
 						});
 				});
 			}

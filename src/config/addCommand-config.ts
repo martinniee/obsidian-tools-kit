@@ -1,9 +1,6 @@
+import { addBackToTopLink, deleteBackToTopLink } from './../options/addBackToTopLink';
 import { copyMainContentToClipboard } from "src/options/copyMainContentsAndWriteToClipboard";
 import nlToolsKit from "../../main";
-import {
-	addBackToTopLinkForOtherHeaders,
-	clearBackToTopLink,
-} from "../options/addBackToTopLink";
 import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/addBackToTopLinkForJuejin";
 import { resolveFrontmatterLinkTextAsLink } from "../options/resolveFronmatterLinkAsExternalLink";
 import { insertCopyright } from "src/options/insertCopyrightToBlankline";
@@ -16,16 +13,16 @@ export const addCommand = (plugin: nlToolsKit) => {
 	// --------Back-to-top link--------
 	plugin.addCommand({
 		id: "01-add-back-to-top-link-clear",
-		name: "添加——回到顶部链接（根据h1标题）",
-		callback: () => {
-			addBackToTopLinkForOtherHeaders();
+		name: "添加——回到顶部链接（back2top）",
+		callback: async () => {
+			await addBackToTopLink.process(plugin);
 		},
 	});
 	plugin.addCommand({
 		id: "02add-back-to-top-link",
-		name: "清除——回到顶部链接（根据h1标题）",
+		name: "清除——回到顶部链接（back2top）",
 		callback: () => {
-			clearBackToTopLink();
+			deleteBackToTopLink.process(plugin);
 		},
 	});
 	// --------Copy content added btp link for juejin to clipboard--------

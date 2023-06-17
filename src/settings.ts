@@ -9,6 +9,7 @@ export interface nlToolsKitSettings {
     copyrightInfo: string,
     uniqueId: string,
     imgCaptionSign: string,
+    backToTopText:string
 }
 
 /**
@@ -20,6 +21,7 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
     copyrightInfo: '',
     uniqueId: '',
     imgCaptionSign: '图',
+    backToTopText: '回到顶部'
 };
 /**
  * create setting tab object
@@ -73,14 +75,26 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
                     })
             });
         new Setting(containerEl)
-            .setName('图注字符')
-            .setDesc("图注的起始字符,可选 '图' 或 'figure' ")
+            .setName('Image caption name')
+            .setDesc("Choose the text as name leading caption description")
             .addDropdown((dropdown) => {
                     dropdown.addOption("图",'图')
                     dropdown.addOption('figure',"figure")
                     dropdown.setValue(this.plugin.settings.imgCaptionSign)
                     dropdown.onChange(async (option) => {
                         this.plugin.settings.imgCaptionSign = option;
+                        await this.plugin.saveSettings();
+                    })
+            });
+        new Setting(containerEl)
+            .setName('Back to top display text')
+            .setDesc("Choose the text as display text of back-top-link' ")
+            .addDropdown((dropdown) => {
+                    dropdown.addOption("回到顶部",'回到顶部')
+                    dropdown.addOption('Back-To-Top',"Back-To-Top")
+                    dropdown.setValue(this.plugin.settings.backToTopText)
+                    dropdown.onChange(async (option) => {
+                        this.plugin.settings.backToTopText = option;
                         await this.plugin.saveSettings();
                     })
             });

@@ -1,5 +1,15 @@
 import { fileContentsProcess } from "./utils/utils";
-
+export const deleteBackToTopLink = new fileContentsProcess(
+	async (line, metaData, plugin) => {
+		const back2TopLinkRegex = new RegExp(
+			`\\[(?:${plugin?.settings?.backToTopText})\\]\\(.*\\)`
+		);
+		if (back2TopLinkRegex.test(line)) {
+			return line.replace(back2TopLinkRegex, "");
+		}
+		return line;
+	}
+);
 /**
  *
  * Add back to top link for other headers
@@ -14,36 +24,41 @@ import { fileContentsProcess } from "./utils/utils";
  *
  * @param docContent current note content
  */
-export const addBackToTopLinkForOtherHeaders = async () => {
-	fileContentsProcess((line: string, metaData: any) => {
-		const h1TitleRegex = /(?<=^# )(?<h1Title>.*)/;
-		let h1Title = "";
-		if (h1TitleRegex.test(line) && !metaData.flag) {
-			metaData.flag = true;
-			const match = h1TitleRegex.exec(line) as RegExpExecArray;
-			h1Title = match?.groups?.h1Title as string;
-			metaData.h1Title = h1Title;
+export const addBackToTopLink = new fileContentsProcess(
+	async (line, metaData, plugin) => {
+		const h1TitleRegex = /(?<=# )(?<h1Title>.*)/;
+		if (
+			h1TitleRegex.test(line) &&
+			metaData.H1Count.value === 0 &&
+			!metaData.isInCode.value
+		) {
+			metaData.H1Count.value++;
+			metaData.H1Title.value = /(?<=# )(?<h1Title>.*)/.exec(line)?.groups
+				?.h1Title as string;
 		}
-		const otherHeadingRegex = /^(?<otherHeader>#{2,6} +.*)/;
-		if (otherHeadingRegex.test(line)) {
-			const otherHeader =
-				otherHeadingRegex.exec(line)?.groups?.otherHeader;
-			// concat
-			const afterContent: string = `[回到顶部](#${metaData.h1Title})\n${otherHeader}`;
-			return line.replace(otherHeader as string, afterContent);
+		if (/( *)```/.test(line)) {
+			metaData.isInCode.value = !metaData.isInCode.value;
 		}
-		return line;
-	});
-};
-/**
- * Clear all existed back-top-links
- */
-export const clearBackToTopLink = async () => {
-	fileContentsProcess((line: string) => {
-		const back2TopLinkRegex = /(\[回到顶部\]\(#.*\))/;
-		if (back2TopLinkRegex.test(line)) {
-			return line.replace(back2TopLinkRegex, "") as string;
+		const otherHeadingsRegex = /(?<otherHeader>#{2,6} +.*)/;
+		if (otherHeadingsRegex.test(line) && !metaData.isInCode.value) {
+			const otherHeader = otherHeadingsRegex.exec(line)?.groups
+				?.otherHeader as string;
+			const afterContent: string = `[${plugin?.settings?.backToTopText}](#${metaData.H1Title.value})\n${otherHeader}`;
+			return line.replace(otherHeader, afterContent);
 		}
 		return line;
-	});
-};
+	},
+	{
+		isInCode: {
+			value: false,
+		},
+		H1Title: {
+			value: "",
+		},
+		H1Count: {
+			value: 0,
+		},
+	},
+	2000,
+	deleteBackToTopLink
+);
