@@ -46,14 +46,14 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 				});
 				// Back TO Top
 				menu.addItem((item) => {
-					item.setTitle("Back TO Top: Insert/Update")
+					item.setTitle("Back To Top: Insert/Update")
 						.setIcon("corner-right-up")
 						.onClick(async () => {
 							await addBackToTopLink.process(plugin);
 						});
 				});
 				menu.addItem((item) => {
-					item.setTitle("Back TO Top: Delete")
+					item.setTitle("Back To Top: Delete")
 						.setIcon("corner-right-up")
 						.onClick(async () => {
 							await deleteBackToTopLink.process(plugin as nlToolsKit);
