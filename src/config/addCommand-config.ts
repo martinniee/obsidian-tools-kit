@@ -1,13 +1,9 @@
-import { addBackToTopLink, deleteBackToTopLink } from './../options/addBackToTopLink';
 import { copyMainContentToClipboard } from "src/options/copyMainContentsAndWriteToClipboard";
 import nlToolsKit from "../../main";
 import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/addBackToTopLinkForJuejin";
 import { resolveFrontmatterLinkTextAsLink } from "../options/resolveFronmatterLinkAsExternalLink";
 import { insertCopyright } from "src/options/insertCopyrightToBlankline";
 import { addUniqueIdToFrontmatterField } from "src/options/genUniqueIdForNote";
-import { addImgCaptionText } from "src/options/addImgCaptionText";
-import { insertToc } from "src/options/generateTOC";
-import { numberingHeadings } from "src/options/numberingHeadings";
 
 export const addCommand = (plugin: nlToolsKit) => {
 	// --------Copy content added btp link for juejin to clipboard--------
