@@ -45,7 +45,8 @@ export const insertCopyright = async (plugin: nlToolsKit) => {
 	// 2. remvoe line with coprytight info randomly
 	for (
 		let index = 0;
-		index < Math.floor(blankLineArr.length * 0.98);
+		index <
+		Math.floor(blankLineArr.length * plugin.settings.copyrightInfoDensity);
 		index++
 	) {
 		randomIndexs.push(

@@ -1,5 +1,5 @@
 // import necessary package : PluginSettingTab、Setting、App
-import { PluginSettingTab, Setting, App } from "obsidian";
+import { PluginSettingTab, Setting, App, SliderComponent } from "obsidian";
 // import "nlToolsKit"
 import nlToolsKit from "../main";
 /**
@@ -10,6 +10,8 @@ export interface nlToolsKitSettings {
 	uniqueId: string;
 	imgCaptionSign: string;
 	backToTopText: string;
+	copyrightInfoDensity: number;
+	defautlCopyrightInfoDensity: number;
 }
 
 /**
@@ -22,6 +24,8 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
 	uniqueId: "",
 	imgCaptionSign: "图",
 	backToTopText: "回到顶部",
+	copyrightInfoDensity: 0,
+	defautlCopyrightInfoDensity: 0.4,
 };
 /**
  * create setting tab object
@@ -30,6 +34,7 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 	// set plugin object
 	// plugin: <plugin object main.ts >
 	plugin: nlToolsKit;
+	settingSlider: SliderComponent;
 
 	/**
 	 * Constructor to create Plugin nlToolsKitSettingsTab
@@ -97,6 +102,38 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 				dropdown.onChange(async (option) => {
 					this.plugin.settings.backToTopText = option;
 					await this.plugin.saveSettings();
+				});
+			});
+		// ============Copyright Info Density=================
+		new Setting(containerEl)
+			.setName("Copyright Info Density")
+			.setDesc(
+				`Determine the density of generated copyright info. default as ${this.plugin.settings.defautlCopyrightInfoDensity}. The lower value is,The  denser the  copyright info is.`
+			)
+			.addSlider((slider) => {
+				this.settingSlider = slider;
+				slider
+					.setLimits(0, 1, "any")
+					.setValue(this.plugin.settings.copyrightInfoDensity)
+					.setDynamicTooltip()
+					.onChange(async (value) => {
+						this.plugin.settings.copyrightInfoDensity = value;
+						await this.plugin.saveSettings();
+					});
+			});
+		new Setting(containerEl)
+			.setName("Reset to default")
+			.setDesc("Default is 0.9")
+			.addButton((button) => {
+				button.setButtonText("Reset").onClick(() => {
+					this.settingSlider.setValue(
+						this.plugin.settings.copyrightInfoDensity
+					);
+					this.settingSlider.onChange(async () => {
+						this.plugin.settings.copyrightInfoDensity =
+							this.plugin.settings.defautlCopyrightInfoDensity;
+						await this.plugin.saveSettings();
+					});
 				});
 			});
 	}
