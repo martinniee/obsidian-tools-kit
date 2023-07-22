@@ -1,6 +1,6 @@
 {
 	"name": "nl-tools-Kit",
-	"version": "0.4.5",
+	"version": "0.5.0",
 	"description": "add Back-to-top link to  header title which is over h1 title",
 	"main": "main.js",
 	"scripts": {
