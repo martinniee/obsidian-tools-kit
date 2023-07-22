@@ -1,5 +1,6 @@
 import { MarkdownView } from "obsidian";
 import {
+	deleteArrayElement,
 	fileContentsProcess,
 	getContentsArr,
 	getFirstH1HeadingPostion,
@@ -10,68 +11,59 @@ import {
  * @returns  markdown toc lists with  link to header
  */
 const generateTableOfContents = async (): Promise<string> => {
-	const lines = await getContentsArr();
+	let lines = await getContentsArr();
+	// pre-process all the lines
+	lines = replaceSpaceWithUnderScore(lines);
 	const toc = []; // Initialize an empty array to hold the table of contents
 	let isIncode = false;
 	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i];
-		if (/( *)```/.test(line)) {
-			isIncode = !isIncode;
+		if (lines[i].match(/^ *```.*$/m)) {
+			isIncode = true;
 		}
-		if (line.startsWith("##") && !isIncode) {
+		if (lines[i].match(/^ *``` *$/m)) {
+			isIncode = false;
+		}
+		if (lines[i].startsWith("##") && !isIncode) {
 			// If the line starts with a hash symbol, it is a heading
-			const level = line.indexOf(" "); // Determine the level of the heading by counting the number of hash symbols
-			const text = line.slice(level + 1); // Extract the text of the heading by removing the hash symbols and leading whitespace
+			const level = lines[i].indexOf(" "); // Determine the level of the heading by counting the number of hash symbols
+			const text = lines[i].slice(level + 1); // Extract the text of the heading by removing the hash symbols and leading whitespace
 			toc.push({ text, level }); // Add the heading to the table of contents
 		}
 	}
 	const markdownToc = toc
 		.map((heading) => {
 			let { text, level } = heading;
-			text.trimEnd().replace(/\s+/g, "_");
 			return `${"  ".repeat(level - 1)}- [${text}](#${text})`; // Use the ID to create a link to the heading
 		})
 		.join("\n");
 	return markdownToc;
 };
-export const removeToc = new fileContentsProcess(
-	async (line, metaData) => {
-		const tocItemRegex = /(?:  ?)+- \[(((\d\.)+\d-)?(.*))\]\(#\1\)/g;
-		if (line.startsWith("**TOC**")) {
-			metaData.tocCount.value++;
-			if (metaData.tocCount.value === 1) {
-				metaData.isInToc.value = !metaData.isInToc.value;
-				return "DELETE_LINE";
-			}
-			if (metaData.isInToc.value) {
-				return "DELETE_LINE";
-			}
+/**
+ * 删除 toc 需要考虑 连续的 删除项导致的索引不一致（当前索引>要删除的项的索引）
+ */
+export const removeToc = new fileContentsProcess((lines) => {
+	let firstMatch = 0;
+	const tocItemRegex = /(?:  ?)+- \[(((\d\.)+\d-)?(.*))\]\(#\1\)/g;
+	while (firstMatch < lines.length) {
+		if (lines[firstMatch].startsWith("**TOC**")) {
+			lines = deleteArrayElement(lines, firstMatch);
+			continue;
 		}
-		if (tocItemRegex.test(line) && metaData.isInToc.value) {
-			return "DELETE_LINE";
-		}
-		if (!metaData.isInToc.value) {
-			return line;
+		if (lines[firstMatch].match(tocItemRegex)) {
+			lines = deleteArrayElement(lines, firstMatch);
+			continue;
 		}
 		const headingRegex = /^#{1,6}(?: +).*(?: +)?$/m;
-		if (headingRegex.test(line) && metaData.isInToc.value) {
-			metaData.isInToc.value = false;
-			return line;
+		if (lines[firstMatch].match(headingRegex)) {
+			firstMatch++;
+			continue;
 		}
-		return line;
-	},
-	{
-		isInToc: {
-			value: false,
-		},
-		tocCount: {
-			value: 0,
-		},
-	},
-	2000
-);
+		firstMatch++;
+		continue;
+	}
+	return lines;
+}, 2000);
 export const insertToc = async () => {
-	await removeToc.process();
 	const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 	const toc = await generateTableOfContents();
 	const finalToc = `**TOC**\n${toc}\n`;
@@ -82,4 +74,14 @@ export const insertToc = async () => {
 			ch: 0,
 		});
 	}
+};
+const replaceSpaceWithUnderScore = (arr: string[]): string[] => {
+	const headingRegex = /(?<hashSign>^#{2,6} )(?<title>.*?)(?<tailSpace> *)$/m;
+	return arr.map((item) => {
+		if (!item.match(headingRegex)) return item;
+		const hashSignText = item.match(headingRegex)?.groups
+			?.hashSign as string;
+		const titleText = item.match(headingRegex)?.groups?.title as string;
+		return `${hashSignText}${titleText.replaceAll(/(?: +|	+)/g, "_")}`;
+	});
 };
