@@ -1,7 +1,8 @@
 import { Notice } from "obsidian";
 import { fileContentsProcess } from "../utils";
+import { transformArabicToHanz } from "src/utils/transformArabicNumberToHan";
 
-export const numberingHeadings = new fileContentsProcess((lines) => {
+export const numberingHeadings = new fileContentsProcess((lines, plugin) => {
 	let headingNums = [0, 0, 0, 0, 0, 0];
 	let isIncode = false;
 	let H1Count = 0;
@@ -36,7 +37,16 @@ export const numberingHeadings = new fileContentsProcess((lines) => {
 			});
 			headingNums[headingLevel - 1]++;
 			// '1' indicates that slice starts from heading 2 level
-			const headingNum = headingNums.slice(1, headingLevel).join(".");
+			let headingNum = headingNums.slice(1, headingLevel).join(".");
+
+			if (
+				plugin?.settings.heading2NumberingStyle === "汉字" &&
+				headingLevel === 2
+			) {
+				headingNum = transformArabicToHanz(
+					headingNums[headingLevel - 1]
+				);
+			}
 			let headingText = lines[i].slice(headingLevel).trim();
 			if (lines[i].includes(" ")) {
 				headingText = headingText.replaceAll(/(?: +|	+)/g, "_");
@@ -53,8 +63,9 @@ export const numberingHeadings = new fileContentsProcess((lines) => {
 });
 export const removeHeadingNum = new fileContentsProcess((lines) => {
 	for (let i = 0; i < lines.length; i++) {
+		//  format is as 1.2.3-foo or 一.2.3-foo or  1-foo or 一-foo
 		const numberedHeadingRegex =
-			/#{2,6}(\s+)(?<numbering>((?:(?:\d+\.)+(?:\d+)-)+)+|(?:(?:\d+-)+)).*/;
+			/#{2,6}(?:\s+)(?<numbering>((?:(?:\d+\.)+(?:\d+)-)+)+|(?:(?:\d+-)+)|(?:[\u4e00-\u9fa5]+-)).*/;
 		if (lines[i].match(numberedHeadingRegex)) {
 			const numbering = lines[i].match(numberedHeadingRegex)?.groups
 				?.numbering as string;

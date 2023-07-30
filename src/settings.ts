@@ -12,6 +12,7 @@ export interface nlToolsKitSettings {
 	backToTopText: string;
 	copyrightInfoDensity: number;
 	defautlCopyrightInfoDensity: number;
+	heading2NumberingStyle: string;
 }
 
 /**
@@ -25,7 +26,8 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
 	imgCaptionSign: "图",
 	backToTopText: "回到顶部",
 	copyrightInfoDensity: 0,
-	defautlCopyrightInfoDensity: 0.4,
+	defautlCopyrightInfoDensity: 0.8,
+	heading2NumberingStyle: "数字",
 };
 /**
  * create setting tab object
@@ -123,7 +125,7 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 			});
 		new Setting(containerEl)
 			.setName("Reset to default")
-			.setDesc("Default is 0.9")
+			.setDesc("Default is 0.8")
 			.addButton((button) => {
 				button.setButtonText("Reset").onClick(() => {
 					this.settingSlider.setValue(
@@ -134,6 +136,18 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 							this.plugin.settings.defautlCopyrightInfoDensity;
 						await this.plugin.saveSettings();
 					});
+				});
+			});
+		new Setting(containerEl)
+			.setName("Heading 2 level numbering style")
+			.setDesc("Choose the style for numbering heading 2 level ")
+			.addDropdown((dropdown) => {
+				dropdown.addOption("数字", "数字");
+				dropdown.addOption("汉字", "汉字");
+				dropdown.setValue(this.plugin.settings.heading2NumberingStyle);
+				dropdown.onChange(async (option) => {
+					this.plugin.settings.heading2NumberingStyle = option;
+					await this.plugin.saveSettings();
 				});
 			});
 	}
