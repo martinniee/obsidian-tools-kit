@@ -70,3 +70,7 @@ Release 0.5.0 2023/07/23
 Release 0.5.1 2023/07/30
 
 -   ✨ feat: add optional style for numbering heading 2 level
+
+Release 0.5.2 2023/07/30
+
+-   🐞 fix: plugin setting config does not work

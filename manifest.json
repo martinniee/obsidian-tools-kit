@@ -1,11 +1,14 @@
 {
 	"id": "nl-tools-Kit",
 	"name": "Tools Kit",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"minAppVersion": "0.15.0",
 	"description": "Integrate various of utilities used to process markdown",
 	"author": "Nathaniel",
 	"authorUrl": "https://github.com/martinniee/",
-	"fundingUrl": "https://ko-fi.com/J3J6IL7MY",
-	"isDesktopOnly": "false"
+	"fundingUrl": {
+		"Buy Me a Coffee": "https://ko-fi.com/J3J6IL7MY",
+		"支付宝/微信": "https://t.ly/yqnbx"
+	},
+	"isDesktopOnly": "true"
 }
