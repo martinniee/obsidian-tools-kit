@@ -27,7 +27,9 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 						.setIcon("list-ordered")
 						.onClick(async () => {
 							await removeHeadingNum.process();
-							await numberingHeadings.process();
+							await numberingHeadings.process(
+								plugin as nlToolsKit
+							);
 						});
 				});
 				menu.addItem((item) => {
