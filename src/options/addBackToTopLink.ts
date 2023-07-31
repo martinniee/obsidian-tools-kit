@@ -41,6 +41,8 @@ export const addBackToTopLink = new fileContentsProcess((lines, plugin) => {
 	for (let i = 0; i < lines.length; i++) {
 		const h1TitleRegex = /(?<=# )(?<h1Title>.*)/;
 		if (h1TitleRegex.test(lines[i]) && H1Count === 0 && !isIncode) {
+			// replace all space in  title with underscore
+			lines[i] = replaceSpaceWithUnderScore(lines[i])
 			H1Count++;
 			H1Title = lines[i].match(/(?<=# )(?<h1Title>.*)/)?.groups
 				?.h1Title as string;
@@ -60,3 +62,10 @@ export const addBackToTopLink = new fileContentsProcess((lines, plugin) => {
 	}
 	return lines;
 }, 2000);
+
+const replaceSpaceWithUnderScore = (line: string): string => {
+	const h1HeadingRegex = /(?<hashSign>^# )(?<title>.*?)(?<tailSpace> *)$/m;
+	const hashSignText = line.match(h1HeadingRegex)?.groups?.hashSign as string;
+	const titleText = line.match(h1HeadingRegex)?.groups?.title as string;
+	return `${hashSignText}${titleText.replaceAll(/(?: +|	+)/g, "_")}`;
+};
