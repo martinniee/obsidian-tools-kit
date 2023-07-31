@@ -74,3 +74,8 @@ Release 0.5.1 2023/07/30
 Release 0.5.2 2023/07/30
 
 -   🐞 fix: plugin setting config does not work
+
+Release 0.5.3 2023/07/30
+
+-   🐞 fix: avoid processing target in code fence
+-   🐞 fix: replace all spaces in title with underscore
