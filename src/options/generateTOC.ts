@@ -5,6 +5,10 @@ import {
 	getContentsArr,
 	getFirstH1HeadingPostion,
 } from "../utils";
+import {
+	startMardownCodefencesymbol,
+	endMardownCodefencesymbol,
+} from "src/config/regex";
 
 /**
  * Generate table of content in markdown style
@@ -17,11 +21,10 @@ const generateTableOfContents = async (): Promise<string> => {
 	const toc = []; // Initialize an empty array to hold the table of contents
 	let isIncode = false;
 	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].match(/^ *```.*$/m)) {
-			isIncode = true;
-		}
-		if (lines[i].match(/^ *``` *$/m)) {
-			isIncode = false;
+		if (lines[i].match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (lines[i].match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
 		}
 		if (lines[i].startsWith("##") && !isIncode) {
 			// If the line starts with a hash symbol, it is a heading
@@ -44,12 +47,18 @@ const generateTableOfContents = async (): Promise<string> => {
 export const removeToc = new fileContentsProcess((lines) => {
 	let firstMatch = 0;
 	const tocItemRegex = /(?:  ?)+- \[(((\d\.)+\d-)?(.*))\]\(#\1\)/g;
+	let isIncode = false;
 	while (firstMatch < lines.length) {
-		if (lines[firstMatch].startsWith("**TOC**")) {
+		if (lines[firstMatch].match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (lines[firstMatch].match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		}
+		if (lines[firstMatch].startsWith("**TOC**") && !isIncode) {
 			lines = deleteArrayElement(lines, firstMatch);
 			continue;
 		}
-		if (lines[firstMatch].match(tocItemRegex)) {
+		if (lines[firstMatch].match(tocItemRegex) && !isIncode) {
 			lines = deleteArrayElement(lines, firstMatch);
 			continue;
 		}
@@ -77,11 +86,21 @@ export const insertToc = async () => {
 };
 const replaceSpaceWithUnderScore = (arr: string[]): string[] => {
 	const headingRegex = /(?<hashSign>^#{2,6} )(?<title>.*?)(?<tailSpace> *)$/m;
+	let isIncode = false;
 	return arr.map((item) => {
+		if (item.match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (item.match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		}
 		if (!item.match(headingRegex)) return item;
 		const hashSignText = item.match(headingRegex)?.groups
 			?.hashSign as string;
 		const titleText = item.match(headingRegex)?.groups?.title as string;
-		return `${hashSignText}${titleText.replaceAll(/(?: +|	+)/g, "_")}`;
+		if (!isIncode) {
+			return `${hashSignText}${titleText.replaceAll(/(?: +|	+)/g, "_")}`;
+		} else {
+			return `${hashSignText}${titleText}`;
+		}
 	});
 };

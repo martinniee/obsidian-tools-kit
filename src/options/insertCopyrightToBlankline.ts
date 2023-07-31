@@ -1,15 +1,25 @@
 import nlToolsKit from "main";
 import { TFile } from "obsidian";
 import {
+	startMardownCodefencesymbol,
+	endMardownCodefencesymbol,
+} from "src/config/regex";
+import {
 	deleteArrayElement,
 	fileContentsProcess,
 	getContentsArr,
 } from "src/utils";
 export const removeCopyright = new fileContentsProcess((lines, plugin) => {
 	let firstMatch = 0;
+	let isIncode = false;
 	while (firstMatch < lines.length) {
+		if (lines[firstMatch].match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (lines[firstMatch].match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		}
 		if (
-			lines[firstMatch].includes(plugin?.settings.copyrightInfo as string)
+			lines[firstMatch].includes(plugin?.settings.copyrightInfo as string) && !isIncode
 		) {
 			lines = deleteArrayElement(lines, firstMatch);
 			continue;
@@ -30,9 +40,15 @@ export const insertCopyright = async (plugin: nlToolsKit) => {
 	const copyrightInfo: string = plugin.settings.copyrightInfo;
 	let randomIndexs: number[] = [];
 	let newArr = [];
+	let isIncode = false;
 
 	for (let i in contentLines) {
-		if (contentLines[i].trim().length === 0) {
+		if (i.match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (i.match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		}
+		if (contentLines[i].trim().length === 0 && !isIncode) {
 			// 1. fill all blank lines with copyright info
 			blankLineArr.push(parseInt(i));
 			newArr.push(copyrightInfo);
@@ -65,6 +81,7 @@ export const insertCopyright = async (plugin: nlToolsKit) => {
 				continue;
 			}
 		}
+		// blank line does not exist or fill all blank line with copyright info
 		if (!isFind) newArrAfter.push(newArr[i]);
 	}
 	app.vault.adapter.write(activeFile.path, newArrAfter.join("\n"));

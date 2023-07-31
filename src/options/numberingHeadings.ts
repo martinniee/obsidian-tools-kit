@@ -1,6 +1,10 @@
 import { Notice } from "obsidian";
 import { fileContentsProcess } from "../utils";
 import { transformArabicToHanz } from "src/utils/transformArabicNumberToHan";
+import {
+	startMardownCodefencesymbol,
+	endMardownCodefencesymbol,
+} from "src/config/regex";
 
 export const numberingHeadings = new fileContentsProcess((lines, plugin) => {
 	let headingNums = [0, 0, 0, 0, 0, 0];
@@ -9,11 +13,10 @@ export const numberingHeadings = new fileContentsProcess((lines, plugin) => {
 	let isUnderH1 = false;
 	for (let i = 0; i < lines.length; i++) {
 		// Skip the situation that heading within code fencce
-		if (lines[i].match(/^ *```.*$/m)) {
-			isIncode = true;
-		}
-		if (lines[i].match(/^ *``` *$/m)) {
-			isIncode = false;
+		if (lines[i].match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (lines[i].match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
 		}
 		// If current line is H1
 		if (lines[i].startsWith("# ") && H1Count === 0) {
@@ -62,11 +65,17 @@ export const numberingHeadings = new fileContentsProcess((lines, plugin) => {
 	return lines;
 });
 export const removeHeadingNum = new fileContentsProcess((lines) => {
+	let isIncode = false;
 	for (let i = 0; i < lines.length; i++) {
+		if (lines[i].match(startMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		} else if (lines[i].match(endMardownCodefencesymbol)) {
+			isIncode = !isIncode;
+		}
 		//  format is as 1.2.3-foo or 一.2.3-foo or  1-foo or 一-foo
 		const numberedHeadingRegex =
 			/#{2,6}(?:\s+)(?<numbering>((?:(?:\d+\.)+(?:\d+)-)+)+|(?:(?:\d+-)+)|(?:[\u4e00-\u9fa5]+-)).*/;
-		if (lines[i].match(numberedHeadingRegex)) {
+		if (lines[i].match(numberedHeadingRegex) && !isIncode) {
 			const numbering = lines[i].match(numberedHeadingRegex)?.groups
 				?.numbering as string;
 			lines[i] = lines[i].replace(numbering, "");
