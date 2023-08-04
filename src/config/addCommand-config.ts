@@ -4,6 +4,10 @@ import { copyMainContentWithAddedB2PLinkToClipboard } from "../options/addBackTo
 import { resolveFrontmatterLinkTextAsLink } from "../options/resolveFronmatterLinkAsExternalLink";
 import { insertCopyright } from "src/options/insertCopyrightToBlankline";
 import { addUniqueIdToFrontmatterField } from "src/options/genUniqueIdForNote";
+import {
+	collapseCallout,
+	expandCallout,
+} from "src/options/collapseExpandCallout";
 
 export const addCommand = (plugin: nlToolsKit) => {
 	// --------Copy content added btp link for juejin to clipboard--------
@@ -44,6 +48,21 @@ export const addCommand = (plugin: nlToolsKit) => {
 		name: "根据文件名给指定字段生成MD5唯一id",
 		callback: async () => {
 			addUniqueIdToFrontmatterField(plugin);
+		},
+	});
+	// Collapse or Expand callout
+	plugin.addCommand({
+		id: "collapse all expanded callouts",
+		name: "一键折叠所有展开的callout",
+		callback: async () => {
+			await collapseCallout.process(plugin);
+		},
+	});
+	plugin.addCommand({
+		id: "expand all collapsed callouts",
+		name: "一键展开所有折叠的callout",
+		callback: async () => {
+			await expandCallout.process(plugin);
 		},
 	});
 };

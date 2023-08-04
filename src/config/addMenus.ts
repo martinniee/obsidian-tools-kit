@@ -17,6 +17,10 @@ import {
 	insertCopyright,
 	removeCopyright,
 } from "src/options/insertCopyrightToBlankline";
+import {
+	collapseCallout,
+	expandCallout,
+} from "src/options/collapseExpandCallout";
 export const addContextMenus = (plugin: nlToolsKit) => {
 	plugin.registerEvent(
 		plugin.app.workspace.on(
@@ -107,6 +111,22 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 						.setIcon("subtitles")
 						.onClick(async () => {
 							await removeCopyright.process(plugin);
+						});
+				});
+				// collapse  callout
+				menu.addItem((item) => {
+					item.setTitle("Collapse callout")
+						.setIcon("chevrons-down")
+						.onClick(async () => {
+							await collapseCallout.process(plugin);
+						});
+				});
+				//expand callout
+				menu.addItem((item) => {
+					item.setTitle("Expand callout")
+						.setIcon("chevron-up")
+						.onClick(async () => {
+							await expandCallout.process(plugin);
 						});
 				});
 			}
