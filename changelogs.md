@@ -79,3 +79,7 @@ Release 0.5.3 2023/07/30
 
 -   🐞 fix: avoid processing target in code fence
 -   🐞 fix: replace all spaces in title with underscore
+
+Release 0.5.4 2023/08/05
+
+-   ✨ feat: collapse or expand all collapsed or expanded callout
