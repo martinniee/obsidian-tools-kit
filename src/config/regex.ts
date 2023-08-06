@@ -30,6 +30,6 @@ const calloutMark = [
 	"cite",
 ];
 export const calloutSymbolRegex = new RegExp(
-	`(^.*\\[!(?:${calloutMark.join("|")})\\])(?<folderSymbol>(?:\\+|-))(.*$)`,
+	`(^.*\\[!(?:${calloutMark.join("|")})[^\\\\\n]*\\])(?<folderSymbol>(?:\\+|-))(.*$)`,
 	"im"
 );

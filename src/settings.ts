@@ -13,6 +13,7 @@ export interface nlToolsKitSettings {
 	copyrightInfoDensity: number;
 	defautlCopyrightInfoDensity: number;
 	heading2NumberingStyle: string;
+	enableDebug: boolean;
 }
 
 /**
@@ -28,6 +29,7 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
 	copyrightInfoDensity: 0,
 	defautlCopyrightInfoDensity: 0.8,
 	heading2NumberingStyle: "数字",
+	enableDebug: false,
 };
 /**
  * create setting tab object
@@ -147,6 +149,20 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 				dropdown.setValue(this.plugin.settings.heading2NumberingStyle);
 				dropdown.onChange(async (option) => {
 					this.plugin.settings.heading2NumberingStyle = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		new Setting(containerEl).setName("Debug").setHeading();
+
+		new Setting(containerEl)
+			.setName("Debug mode")
+			.setDesc(
+				"Turns on console.log for plugin events. This is useful for troubleshooting."
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableDebug);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableDebug = option;
 					await this.plugin.saveSettings();
 				});
 			});

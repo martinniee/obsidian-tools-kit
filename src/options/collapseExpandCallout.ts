@@ -5,7 +5,7 @@ import {
 } from "src/config/regex";
 import { fileContentsProcess } from "src/utils";
 
-export const collapseCallout = new fileContentsProcess((lines) => {
+export const collapseCallout = new fileContentsProcess((lines,plugin) => {
 	let isIncode = false;
 	for (let i = 0; i < lines.length; i++) {
 		// Skip the situation that heading within code fencce
@@ -13,6 +13,9 @@ export const collapseCallout = new fileContentsProcess((lines) => {
 			isIncode = !isIncode;
 		} else if (lines[i].match(endMardownCodefencesymbol)) {
 			isIncode = !isIncode;
+		}
+		if (plugin?.settings.enableDebug) {
+			console.log("@calloutSymbolRegex",calloutSymbolRegex);
 		}
 		if (lines[i].match(calloutSymbolRegex) && !isIncode) {
 			lines[i] = lines[i].replace(calloutSymbolRegex, "$1-$3");
@@ -23,7 +26,7 @@ export const collapseCallout = new fileContentsProcess((lines) => {
 	return lines;
 });
 
-export const expandCallout = new fileContentsProcess((lines) => {
+export const expandCallout = new fileContentsProcess((lines,plugin) => {
 	let isIncode = false;
 	for (let i = 0; i < lines.length; i++) {
 		// Skip the situation that heading within code fencce
@@ -31,6 +34,9 @@ export const expandCallout = new fileContentsProcess((lines) => {
 			isIncode = !isIncode;
 		} else if (lines[i].match(endMardownCodefencesymbol)) {
 			isIncode = !isIncode;
+		}
+		if (plugin?.settings.enableDebug) {
+			console.log("@calloutSymbolRegex",calloutSymbolRegex);
 		}
 		if (lines[i].match(calloutSymbolRegex) && !isIncode) {
 			lines[i] = lines[i].replace(calloutSymbolRegex, "$1+$3");
