@@ -83,3 +83,8 @@ Release 0.5.3 2023/07/30
 Release 0.5.4 2023/08/05
 
 -   ✨ feat: collapse or expand all collapsed or expanded callout
+
+Release 0.5.5 2023/08/07
+
+-   fix: [#1](https://github.com/martinniee/obsidian-tools-kit/issues/1)
+-   feat: add toggle setting for determing whether to display option on context menu.
