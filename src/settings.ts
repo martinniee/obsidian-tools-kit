@@ -14,6 +14,11 @@ export interface nlToolsKitSettings {
 	defautlCopyrightInfoDensity: number;
 	heading2NumberingStyle: string;
 	enableDebug: boolean;
+	enableMardownSection: boolean;
+	enableMardownTOC: boolean;
+	enableBackToTop: boolean;
+	enableImageCaption: boolean;
+	enableCalloutCollapseOrExpand: boolean;
 }
 
 /**
@@ -30,6 +35,11 @@ export const DEFAULT_SETTINGS: nlToolsKitSettings = {
 	defautlCopyrightInfoDensity: 0.8,
 	heading2NumberingStyle: "数字",
 	enableDebug: false,
+	enableMardownSection: true,
+	enableMardownTOC: true,
+	enableBackToTop: true,
+	enableImageCaption: false,
+	enableCalloutCollapseOrExpand: false,
 };
 /**
  * create setting tab object
@@ -56,7 +66,78 @@ export class nlToolsKitSettingsTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl("h2", { text: "Tools kit Settings" });
+		containerEl.createEl("h1", { text: "Tools kit Settings" });
+
+		// Editor context menu item display configure
+		new Setting(containerEl)
+			.setName("Editor context menu item display configure")
+			.setHeading();
+		new Setting(containerEl)
+			.setName("Markdown Section")
+			.setDesc(
+				"Whether to add the Markdown Section(Insert/Update and  Delelte) items to editor context menu?"
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableMardownSection);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableMardownSection = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		new Setting(containerEl)
+			.setName("Markdown TOC")
+			.setDesc(
+				"Whether to add the Markdown TOC(Insert/Update and  Delelte) items to editor context menu?"
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableMardownTOC);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableMardownTOC = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		new Setting(containerEl)
+			.setName("Markdown Back To Top link")
+			.setDesc(
+				"Whether to add the Markdown BackToTop link(Insert/Update and  Delelte) items to editor context menu?"
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableBackToTop);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableBackToTop = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		new Setting(containerEl)
+			.setName("Markdown Image Caption")
+			.setDesc(
+				"Whether to add the Markdown Image Caption(Insert/Update and  Delelte) items to editor context menu?"
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.enableImageCaption);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableImageCaption = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		new Setting(containerEl)
+			.setName("Collapse or Expand callout")
+			.setDesc(
+				"Whether to add the 'Collapse or Expand callout' items to editor context menu?"
+			)
+			.addToggle((toggle) => {
+				toggle.setValue(
+					this.plugin.settings.enableCalloutCollapseOrExpand
+				);
+				toggle.onChange(async (option) => {
+					this.plugin.settings.enableCalloutCollapseOrExpand = option;
+					await this.plugin.saveSettings();
+				});
+			});
+		// ------------------------------------------------
+		new Setting(containerEl)
+			.setName("Editor context menu item configure")
+			.setHeading();
 
 		new Setting(containerEl)
 			.setName("Copyright Info")

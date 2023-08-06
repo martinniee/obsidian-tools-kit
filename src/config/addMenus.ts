@@ -26,109 +26,104 @@ export const addContextMenus = (plugin: nlToolsKit) => {
 		plugin.app.workspace.on(
 			"editor-menu",
 			(menu: Menu, _: Editor, view: MarkdownView) => {
-				menu.addItem((item) => {
-					item.setTitle("Markdown Sections: Insert/Update")
-						.setIcon("list-ordered")
-						.onClick(async () => {
-							await removeHeadingNum.process();
-							await numberingHeadings.process(
-								plugin as nlToolsKit
-							);
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle("Markdown Sections: Delete")
-						.setIcon("list-ordered")
-						.onClick(async () => {
-							await removeHeadingNum.process();
-						});
-				});
+				if (plugin.settings.enableMardownSection) {
+					menu.addItem((item) => {
+						item.setTitle("Markdown Sections: Insert/Update")
+							.setIcon("list-ordered")
+							.onClick(async () => {
+								await removeHeadingNum.process();
+								await numberingHeadings.process(
+									plugin as nlToolsKit
+								);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle("Markdown Sections: Delete")
+							.setIcon("list-ordered")
+							.onClick(async () => {
+								await removeHeadingNum.process();
+							});
+					});
+				}
 				// Markdown TOC
-				menu.addItem((item) => {
-					item.setTitle("Markdown TOC: Insert/Update")
-						.setIcon("list")
-						.onClick(async () => {
-							await removeToc.process();
-							await insertToc();
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle("Markdown TOC: Delete")
-						.setIcon("list")
-						.onClick(async () => {
-							await removeToc.process();
-						});
-				});
+				if (plugin.settings.enableMardownTOC) {
+					menu.addItem((item) => {
+						item.setTitle("Markdown TOC: Insert/Update")
+							.setIcon("list")
+							.onClick(async () => {
+								await removeToc.process();
+								await insertToc();
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle("Markdown TOC: Delete")
+							.setIcon("list")
+							.onClick(async () => {
+								await removeToc.process();
+							});
+					});
+				}
+
 				// Back TO Top
-				menu.addItem((item) => {
-					item.setTitle("Back To Top: Insert/Update")
-						.setIcon("corner-right-up")
-						.onClick(async () => {
-							await deleteBackToTopLink.process(
-								plugin as nlToolsKit
-							);
-							await addBackToTopLink.process(plugin);
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle("Back To Top: Delete")
-						.setIcon("corner-right-up")
-						.onClick(async () => {
-							await deleteBackToTopLink.process(
-								plugin as nlToolsKit
-							);
-						});
-				});
+				if (plugin.settings.enableBackToTop) {
+					menu.addItem((item) => {
+						item.setTitle(
+							"Markdown Back To Top link: Insert/Update"
+						)
+							.setIcon("corner-right-up")
+							.onClick(async () => {
+								await deleteBackToTopLink.process(
+									plugin as nlToolsKit
+								);
+								await addBackToTopLink.process(plugin);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle("Markdown Back To Top link: Delete")
+							.setIcon("corner-right-up")
+							.onClick(async () => {
+								await deleteBackToTopLink.process(
+									plugin as nlToolsKit
+								);
+							});
+					});
+				}
 				// Image Caption
-				menu.addItem((item) => {
-					item.setTitle("Image Caption: Insert/Update")
-						.setIcon("subtitles")
-						.onClick(async () => {
-							await deleteImageCaptionText.process(plugin);
-							await addImgCaptionText.process(plugin);
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle("Image Caption: Delete")
-						.setIcon("subtitles")
-						.onClick(async () => {
-							await deleteImageCaptionText.process(plugin);
-						});
-				});
-				// Copyright Info
-				menu.addItem((item) => {
-					item.setTitle("Copyright Info: Insert/Update")
-						.setIcon("subtitles")
-						.onClick(async () => {
-							await removeCopyright.process(plugin);
-							await insertCopyright(plugin);
-							/* await deleteImageCaptionText.process(plugin);
-							await addImgCaptionText.process(plugin); */
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle("Copyright Info: Delete")
-						.setIcon("subtitles")
-						.onClick(async () => {
-							await removeCopyright.process(plugin);
-						});
-				});
-				// collapse  callout
-				menu.addItem((item) => {
-					item.setTitle("Collapse callout")
-						.setIcon("chevrons-down")
-						.onClick(async () => {
-							await collapseCallout.process(plugin);
-						});
-				});
-				//expand callout
-				menu.addItem((item) => {
-					item.setTitle("Expand callout")
-						.setIcon("chevron-up")
-						.onClick(async () => {
-							await expandCallout.process(plugin);
-						});
-				});
+				if (plugin.settings.enableImageCaption) {
+					menu.addItem((item) => {
+						item.setTitle("Image Caption: Insert/Update")
+							.setIcon("subtitles")
+							.onClick(async () => {
+								await deleteImageCaptionText.process(plugin);
+								await addImgCaptionText.process(plugin);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle("Image Caption: Delete")
+							.setIcon("subtitles")
+							.onClick(async () => {
+								await deleteImageCaptionText.process(plugin);
+							});
+					});
+				}
+				if (plugin.settings.enableCalloutCollapseOrExpand) {
+					// collapse  callout
+					menu.addItem((item) => {
+						item.setTitle("Collapse callout")
+							.setIcon("chevrons-down")
+							.onClick(async () => {
+								await collapseCallout.process(plugin);
+							});
+					});
+					//expand callout
+					menu.addItem((item) => {
+						item.setTitle("Expand callout")
+							.setIcon("chevron-up")
+							.onClick(async () => {
+								await expandCallout.process(plugin);
+							});
+					});
+				}
 			}
 		)
 	);
